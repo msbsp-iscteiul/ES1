@@ -1,13 +1,17 @@
 package pt.iscte.es1.antiSpamFilter.infrastructure;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import pt.iscte.es1.antiSpamFilter.domain.Message;
+import pt.iscte.es1.antiSpamFilter.domain.Rule;
 
 public class LogParserTest {
 
@@ -26,18 +30,18 @@ public class LogParserTest {
 		lines.forEach(line -> {
 			parser.parse(line);
 		});
-		List<HashSet<String>> result = parser.getResult();
-		assertEquals(3, result.size());
-		assertTrue(result.get(0).contains("HTML_MESSAGE"));
-		assertTrue(result.get(1).contains("RDNS_NONE"));
-		assertTrue(result.get(2).contains("SPF_HELO_FAIL"));
+		List<Message> messages = parser.getResult();
+		assertEquals(3, messages.size());
+		assertTrue(messages.get(0).matchesRule(new Rule("HTML_MESSAGE")));
+		assertTrue(messages.get(1).matchesRule(new Rule("RDNS_NONE")));
+		assertTrue(messages.get(2).matchesRule(new Rule("SPF_HELO_FAIL")));
 	}
 	
 	@Test
 	public void ShouldNotIncludeFileName() {
 		LogParser parser = new LogParser();
 		parser.parse(lines.get(0));
-		assertFalse(parser.getResult().get(0).contains("xval_initial/9/_ham_/00035.a0e0e8cdca0b8352a9e9c2c81e5d5cd7"));
+		assertFalse(parser.getResult().get(0).matchesRule(new Rule("xval_initial/9/_ham_/00035.a0e0e8cdca0b8352a9e9c2c81e5d5cd7")));
 	}
 
 }
