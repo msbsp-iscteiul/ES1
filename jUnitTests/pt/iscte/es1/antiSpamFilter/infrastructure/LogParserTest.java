@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pt.iscte.es1.antiSpamFilter.domain.Message;
-import pt.iscte.es1.antiSpamFilter.domain.Rule;
+import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
 public class LogParserTest {
 
@@ -32,16 +32,16 @@ public class LogParserTest {
 		});
 		List<Message> messages = parser.getResult();
 		assertEquals(3, messages.size());
-		assertTrue(messages.get(0).matchesRule(new Rule("HTML_MESSAGE")));
-		assertTrue(messages.get(1).matchesRule(new Rule("RDNS_NONE")));
-		assertTrue(messages.get(2).matchesRule(new Rule("SPF_HELO_FAIL")));
+		assertTrue(messages.get(0).matchesRule(new WeightedRule("HTML_MESSAGE")));
+		assertTrue(messages.get(1).matchesRule(new WeightedRule("RDNS_NONE")));
+		assertTrue(messages.get(2).matchesRule(new WeightedRule("SPF_HELO_FAIL")));
 	}
 	
 	@Test
 	public void ShouldNotIncludeFileName() {
 		LogParser parser = new LogParser();
 		parser.parse(lines.get(0));
-		assertFalse(parser.getResult().get(0).matchesRule(new Rule("xval_initial/9/_ham_/00035.a0e0e8cdca0b8352a9e9c2c81e5d5cd7")));
+		assertFalse(parser.getResult().get(0).matchesRule(new WeightedRule("xval_initial/9/_ham_/00035.a0e0e8cdca0b8352a9e9c2c81e5d5cd7")));
 	}
 
 }

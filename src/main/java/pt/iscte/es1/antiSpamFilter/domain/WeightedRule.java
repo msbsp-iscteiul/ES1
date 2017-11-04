@@ -2,15 +2,25 @@ package pt.iscte.es1.antiSpamFilter.domain;
 
 import java.util.Objects;
 
-public class Rule {
+public class WeightedRule {
 	private final String name;
+	private final Double weight;
 
-	public Rule(String name) {
+	public WeightedRule(String name, Double weight) {
 		this.name = name;
+		this.weight = weight;
+	}
+	
+	public WeightedRule(String name) {
+		this(name, 0.0);
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public Double getWeight() {
+		return weight;
 	}
 
 	@Override
@@ -26,7 +36,7 @@ public class Rule {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Rule other = (Rule) obj;
+		WeightedRule other = (WeightedRule) obj;
 		return Objects.equals(name, other.name);
 	}
 }

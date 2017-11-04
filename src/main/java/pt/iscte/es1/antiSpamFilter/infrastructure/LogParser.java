@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import pt.iscte.es1.antiSpamFilter.domain.Message;
-import pt.iscte.es1.antiSpamFilter.domain.Rule;
+import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
 /**
  * Spam and Ham log parser
@@ -21,10 +21,10 @@ public class LogParser implements FileReaderParser<List<Message>> {
 	@Override
 	public void parse(String line) {
 		String[] lineElements = line.split("\t");
-		HashSet<Rule> lineResults = new HashSet<>();
+		HashSet<WeightedRule> lineResults = new HashSet<>();
 		// ignores the first element (message name)
 		for (int i = 1; i < lineElements.length; i++) {
-			lineResults.add(new Rule(lineElements[i].trim()));
+			lineResults.add(new WeightedRule(lineElements[i].trim()));
 		}
 		result.add(new Message(lineResults));
 	}
