@@ -8,15 +8,15 @@ import pt.iscte.es1.antiSpamFilter.domain.Message;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
 /**
- * Spam and Ham log parser
- *
+ * Spam and Ham log Message parser.
+ * Assumes Rules are separated by tabs 
  */
 public class LogParser implements FileReaderParser<List<Message>> {
 
 	private final List<Message> result = new ArrayList<>();
 
 	/**
-	 * Parses a log line
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void parse(String line) {
@@ -30,7 +30,7 @@ public class LogParser implements FileReaderParser<List<Message>> {
 	}
 
 	/**
-	 * Returns the parsing results
+	 * {@inheritDoc}
 	 */
 	@Override
 	public List<Message> getResult() {
