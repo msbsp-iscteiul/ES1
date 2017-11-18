@@ -27,9 +27,7 @@ public class LogParserTest {
 	@Test
 	public void ShouldParseCorrectLines() {
 		LogParser parser = new LogParser();
-		lines.forEach(line -> {
-			parser.parse(line);
-		});
+		lines.forEach(parser::parse);
 		List<Message> messages = parser.getResult();
 		assertEquals(3, messages.size());
 		assertTrue(messages.get(0).matchesRule(new WeightedRule("HTML_MESSAGE")));
@@ -41,7 +39,13 @@ public class LogParserTest {
 	public void ShouldNotIncludeFileName() {
 		LogParser parser = new LogParser();
 		parser.parse(lines.get(0));
-		assertFalse(parser.getResult().get(0).matchesRule(new WeightedRule("xval_initial/9/_ham_/00035.a0e0e8cdca0b8352a9e9c2c81e5d5cd7")));
+		Message message = parser.getResult().get(0);
+		assertFalse(message.matchesRule(new WeightedRule("xval_initial/9/_ham_/00035.a0e0e8cdca0b8352a9e9c2c81e5d5cd7")));
+		assertTrue(message.matchesRule(new WeightedRule("BAYES_00")));
+		assertTrue(message.matchesRule(new WeightedRule("HTML_FONT_SIZE_LARGE")));
+		assertTrue(message.matchesRule(new WeightedRule("HTML_MESSAGE")));
+		assertTrue(message.matchesRule(new WeightedRule("MIME_HTML_ONLY")));
+		assertTrue(message.matchesRule(new WeightedRule("SPF_FAIL")));
 	}
 
 }

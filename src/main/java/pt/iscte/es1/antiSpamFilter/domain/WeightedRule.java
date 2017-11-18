@@ -17,6 +17,12 @@ public class WeightedRule {
 	 * @param weight rule weight
 	 */
 	public WeightedRule(String name, Double weight) {
+		if (weight < -5 || weight > 5) {
+			throw new IllegalArgumentException("Weight must be between -5 and 5.");
+		}
+		if (name == null) {
+			throw new IllegalArgumentException("Name can not be null.");
+		}
 		this.name = name;
 		this.weight = weight;
 	}

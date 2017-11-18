@@ -1,8 +1,8 @@
 package pt.iscte.es1.antiSpamFilter.infrastructure;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 
 /**
  * File reader for the AntiSpamFilter application.
@@ -26,15 +26,14 @@ public class AntiSpamFileReader<R> {
 	 * 
 	 * @param file to read
 	 * @return
+	 * @throws IOException 
 	 */
-	public R readFile(String file) {
-		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+	public R readFile(Reader inReader) throws IOException {
+		try (BufferedReader reader = new BufferedReader(inReader)) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				parser.parse(line);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return parser.getResult();
 	}

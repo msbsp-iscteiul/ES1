@@ -1,7 +1,10 @@
 package pt.iscte.es1.antiSpamFilter.infrastructure;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.List;
 
 import org.junit.Before;
@@ -10,18 +13,36 @@ import org.junit.Test;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
 public class AntiSpamFileReaderTest {
-
-	private static final int TOTAL_RULES = 335;
 	
 	@Before
 	public void setUp() throws Exception {
 	}
 
 	@Test
-	public void test() {
+	public void shouldReadLineSeparatedStrings() throws IOException {
 		AntiSpamFileReader<List<WeightedRule>> fr = new AntiSpamFileReader<>(new RuleParser());
-		List<WeightedRule> result = fr.readFile(getClass().getClassLoader().getResource("rules.cf").getFile());
-		assertEquals(TOTAL_RULES, result.size());
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("RULE_ONE\n");
+		sb.append("RULE_TWO\n");
+
+		List<WeightedRule> result = fr.readFile(new StringReader(sb.toString()));
+		assertEquals(2, result.size());
 	}
 
+	@Test(expected = IOException.class)
+	public void shouldOnLockedFile() throws IOException {
+		AntiSpamFileReader<List<WeightedRule>> fr = new AntiSpamFileReader<>(new RuleParser());
+		fr.readFile(new Reader() {
+			
+			@Override
+			public int read(char[] cbuf, int off, int len) throws IOException {
+				throw new IOException("Mocked Exception");
+			}
+			
+			@Override
+			public void close() throws IOException {
+			}
+		});
+	}
 }
