@@ -6,14 +6,40 @@ import java.util.List;
 import org.uma.jmetal.problem.impl.AbstractDoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
 
+import pt.iscte.es1.antiSpamFilter.domain.Message;
+import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
+
+/**
+ * 
+ *
+ */
 @SuppressWarnings("serial")
 public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 
-	public AntiSpamFilterProblem() {
-		// 10 variables (anti-spam filter rules) by default
-		this(10);
+	private List<Message> spam;
+	private List<Message> ham;
+	private List<WeightedRule> rules;
+	private final static double THRESHOLD = 5.0;
+	public final static int INDEX_FALSE_NEGATIVE = 0;
+	public final static int INDEX_FALSE_POSITIVE = 1;
+
+	/**
+	 * @param rules
+	 * @param ham
+	 * @param spam
+	 */
+	public AntiSpamFilterProblem(List<WeightedRule> rules, List<Message> ham, List<Message> spam) {
+
+		this(rules.size());
+		this.ham = ham;
+		this.spam = spam;
+		this.rules = rules;
+
 	}
 
+	/**
+	 * @param numberOfVariables
+	 */
 	public AntiSpamFilterProblem(Integer numberOfVariables) {
 		setNumberOfVariables(numberOfVariables);
 		setNumberOfObjectives(2);
@@ -31,25 +57,41 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 		setUpperLimit(upperLimit);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.uma.jmetal.problem.Problem#evaluate(java.lang.Object)
+	 */
+	@Override
 	public void evaluate(DoubleSolution solution) {
-		double aux, xi, xj;
-		double[] fx = new double[getNumberOfObjectives()];
-		double[] x = new double[getNumberOfVariables()];
-		for (int i = 0; i < solution.getNumberOfVariables(); i++) {
-			x[i] = solution.getVariableValue(i);
+		int falseNegative = 0;
+		int falsePositive = 0;
+
+		for (Message message: spam ) {
+			double aux = 0;
+			for (int index = 0; index != rules.size(); index++) {
+				if(message.matchesRule(rules.get(index))) {
+					aux += solution.getVariableValue(index);
+				}
+			}
+
+			if(aux < THRESHOLD) {
+				falseNegative++;
+			}
 		}
 
-		fx[0] = 0.0;
-		for (int var = 0; var < solution.getNumberOfVariables() - 1; var++) {
-			fx[0] += Math.abs(x[0]); // Example for testing
-		}
+		for (Message message: ham) {
+			double aux = 0;
+			for (int index = 0; index != rules.size(); index++) {
+				if(message.matchesRule(rules.get(index))) {
+					aux += solution.getVariableValue(index);
+				}
+			}
 
-		fx[1] = 0.0;
-		for (int var = 0; var < solution.getNumberOfVariables(); var++) {
-			fx[1] += Math.abs(x[1]); // Example for testing
+			if(aux > THRESHOLD) {
+				falsePositive++;
+			}
 		}
-
-		solution.setObjective(0, fx[0]);
-		solution.setObjective(1, fx[1]);
+		
+		solution.setObjective(INDEX_FALSE_NEGATIVE, falseNegative);
+		solution.setObjective(INDEX_FALSE_POSITIVE, falsePositive);
 	}
 }
