@@ -33,24 +33,20 @@ public class RuleParserTest {
 	@Test
 	public void shouldParseCorrectWeightedLines() {
 		RuleParser rp = new RuleParser();
-		weightedRuleLines.forEach(ruleLine -> {
-			rp.parse(ruleLine);
-		});
+		weightedRuleLines.forEach(rp::parse);
 		List<WeightedRule> result = rp.getResult();
 		assertEquals(5, result.size());
-		assertEquals(new WeightedRule("BAYES_00"), result.get(0));
-		assertEquals(new WeightedRule("FREEMAIL_FROM"), result.get(1));
-		assertEquals(new WeightedRule("RDNS_NONE"), result.get(2));
-		assertEquals(new WeightedRule("FREEMAIL_REPLYTO_END_DIGIT"), result.get(3));
-		assertEquals(new WeightedRule("MSOE_MID_WRONG_CASE"), result.get(4));
+		assertEquals(new WeightedRule("BAYES_00", 1.0).getWeight(), result.get(0).getWeight());
+		assertEquals(new WeightedRule("FREEMAIL_FROM", 2.0).getWeight(), result.get(1).getWeight());
+		assertEquals(new WeightedRule("RDNS_NONE", 3.0).getWeight(), result.get(2).getWeight());
+		assertEquals(new WeightedRule("FREEMAIL_REPLYTO_END_DIGIT", 4.0).getWeight(), result.get(3).getWeight());
+		assertEquals(new WeightedRule("MSOE_MID_WRONG_CASE", 5.0).getWeight(), result.get(4).getWeight());
 	}
 	
 	@Test
 	public void shouldParseCorrectLines() {
 		RuleParser rp = new RuleParser();
-		ruleLines.forEach(ruleLine -> {
-			rp.parse(ruleLine);
-		});
+		ruleLines.forEach(rp::parse);
 		List<WeightedRule> result = rp.getResult();
 		assertEquals(5, result.size());
 		assertEquals(new WeightedRule("BAYES_00"), result.get(0));
