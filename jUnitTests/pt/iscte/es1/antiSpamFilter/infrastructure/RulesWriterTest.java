@@ -1,6 +1,9 @@
 package pt.iscte.es1.antiSpamFilter.infrastructure;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,27 +15,44 @@ import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
 public class RulesWriterTest {
 
-        private static final String FILE_NAME = "d:\\d\\teste.cf";
+	@Before
+	public void setUp() throws Exception {
+	}
 
-        @Before
-        public void setUp() throws Exception {
-        }
+	@Test
+	public void shouldWriteRules() throws IOException {
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		OutputStreamWriter writer = new OutputStreamWriter(byteArrayOutputStream);
 
-        @Test
-        public void shouldWriteFile() throws IOException {
-                List<WeightedRule> weightedRules = new ArrayList<>();
-                weightedRules.add(new WeightedRule("regra", 1.0));
-                weightedRules.add(new WeightedRule("regra_2", 2.0));
-                weightedRules.add(new WeightedRule("regra_3", 3.0));
-                RulesWriter rw = new RulesWriter(weightedRules);
-                rw.write(FILE_NAME);
+		List<WeightedRule> weightedRules = new ArrayList<>();
+		weightedRules.add(new WeightedRule("regra", 1.0));
+		weightedRules.add(new WeightedRule("regra2", 2.0));
+		RulesWriter rw = new RulesWriter(writer);
+		rw.write(weightedRules);
 
-                AntiSpamFileReader<List<WeightedRule>> reader = new AntiSpamFileReader<>(new RuleParser());
-                List<WeightedRule> result = reader.readFile(FILE_NAME);
-
-                assertEquals(new WeightedRule("regra"), result.get(0));
-                assertEquals(new WeightedRule("regra_2"), result.get(1));
-                assertEquals(new WeightedRule("regra_3"), result.get(2));
-        }
-
+		assertEquals("regra\t1.0\nregra2\t2.0\n", byteArrayOutputStream.toString());
+	}
+	
+	@Test(expected = IOException.class)
+	public void canTrowIOExceptionWhenWriting() throws IOException {
+		Writer writer = new Writer() {
+			@Override
+			public void write(char[] cbuf, int off, int len) throws IOException {
+				throw new IOException();				
+			}
+			
+			@Override
+			public void flush() throws IOException {
+			}
+			
+			@Override
+			public void close() throws IOException {
+			}
+		};
+		
+		List<WeightedRule> weightedRules = new ArrayList<>();
+		weightedRules.add(new WeightedRule("regra", 1.0));
+		RulesWriter rw = new RulesWriter(writer);
+		rw.write(weightedRules);
+	}
 }
