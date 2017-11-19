@@ -15,9 +15,20 @@ import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
 public class AntiSpamFilterProblemTest {
 	
-	private List<WeightedRule> rules = new ArrayList<>(Arrays.asList(new WeightedRule("coco"), new WeightedRule("ranheta"),new WeightedRule("facada")));
-	private List<Message> spam = new ArrayList<>(Arrays.asList(new Message(new HashSet<>(Arrays.asList(new WeightedRule("coco"), new WeightedRule("ranheta"))))));
-	private List<Message> ham = new ArrayList<>(Arrays.asList(new Message(new HashSet<>(Arrays.asList(new WeightedRule("facada"), new WeightedRule("ranheta"))))));
+	private List<WeightedRule> rules = new ArrayList<>(Arrays.asList(
+		new WeightedRule("rule1"), new WeightedRule("rule2"),
+		new WeightedRule("rule3")
+	));
+	private List<Message> spam = new ArrayList<>(Arrays.asList(
+		new Message(new HashSet<>(Arrays.asList(
+			new WeightedRule("rule1"), new WeightedRule("rule2")
+		)))
+	));
+	private List<Message> ham = new ArrayList<>(Arrays.asList(
+		new Message(new HashSet<>(Arrays.asList(
+			new WeightedRule("rule3"), new WeightedRule("rule2")
+			)))
+	));
 	
 	private AntiSpamFilterProblem teste = new AntiSpamFilterProblem(rules, ham, spam);
 	private DefaultDoubleSolution doubleSolution = new DefaultDoubleSolution(teste);
@@ -25,23 +36,18 @@ public class AntiSpamFilterProblemTest {
 
 	@Test
 	public void noFalseOrPositiveNegatives() {
-		
 		doubleSolution.setVariableValue(0, 4.0);
 		doubleSolution.setVariableValue(1, 3.0);
 		doubleSolution.setVariableValue(2, -3.0);
 		
 		teste.evaluate(doubleSolution);
 		
-		
-		
 		assertTrue(doubleSolution.getObjective(AntiSpamFilterProblem.INDEX_FALSE_NEGATIVE) == 0.0);
 		assertTrue(doubleSolution.getObjective(AntiSpamFilterProblem.INDEX_FALSE_POSITIVE) == 0.0);
-		
 	}
 	
 	@Test
 	public void oneFalseAndOnePositiveNegatives() {
-		
 		doubleSolution.setVariableValue(0, 2.0);
 		doubleSolution.setVariableValue(1, 2.3);
 		doubleSolution.setVariableValue(2, 4.0);
@@ -50,7 +56,6 @@ public class AntiSpamFilterProblemTest {
 		
 		assertTrue(doubleSolution.getObjective(AntiSpamFilterProblem.INDEX_FALSE_NEGATIVE) == 1.0);
 		assertTrue(doubleSolution.getObjective(AntiSpamFilterProblem.INDEX_FALSE_POSITIVE) == 1.0);
-		
 	}
 
 }

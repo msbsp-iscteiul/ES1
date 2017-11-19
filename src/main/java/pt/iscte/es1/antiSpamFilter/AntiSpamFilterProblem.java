@@ -1,6 +1,8 @@
 package pt.iscte.es1.antiSpamFilter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.uma.jmetal.problem.impl.AbstractDoubleProblem;
@@ -18,13 +20,13 @@ import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 @SuppressWarnings("serial")
 public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 
-	private List<Message> spam;
-	private List<Message> ham;
-	private List<WeightedRule> rules;
-	private final static double THRESHOLD = 5.0;
-	public final static int INDEX_FALSE_NEGATIVE = 0;
-	public final static int INDEX_FALSE_POSITIVE = 1;
-
+	public static final int INDEX_FALSE_NEGATIVE = 0;
+	public static final int INDEX_FALSE_POSITIVE = 1;
+	private static final double THRESHOLD = 5.0;
+	
+	private final List<Message> spam;
+	private final List<Message> ham;
+	private final List<WeightedRule> rules;
 	
 	/**
 	 * Default Constructor that accepts a list of Rules, a list of HAM messages,
@@ -38,34 +40,16 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 	 *            Message List that holds all SPAM Messages;
 	 */
 	public AntiSpamFilterProblem(List<WeightedRule> rules, List<Message> ham, List<Message> spam) {
-
-		this(rules.size());
+		this.rules = rules;
 		this.ham = ham;
 		this.spam = spam;
-		this.rules = rules;
-
-	}
-
-	/**
-	 * Constructor that accepts an Integer NumberOfVariables and sets the lower
-	 * and upper bounds for each variable on the LowerLimit and UpperLimit
-	 * Lists;
-	 * 
-	 * @param numberOfVariables
-	 *            Integer value that defines the number of variables;
-	 */
-	public AntiSpamFilterProblem(Integer numberOfVariables) {
-		setNumberOfVariables(numberOfVariables);
+		
+		setNumberOfVariables(rules.size());
 		setNumberOfObjectives(2);
 		setName("AntiSpamFilterProblem");
 
-		List<Double> lowerLimit = new ArrayList<>(getNumberOfVariables());
-		List<Double> upperLimit = new ArrayList<>(getNumberOfVariables());
-
-		for (int i = 0; i < getNumberOfVariables(); i++) {
-			lowerLimit.add(-5.0);
-			upperLimit.add(5.0);
-		}
+		List<Double> lowerLimit = Collections.nCopies(rules.size(), -THRESHOLD);
+		List<Double> upperLimit = Collections.nCopies(rules.size(), THRESHOLD);
 
 		setLowerLimit(lowerLimit);
 		setUpperLimit(upperLimit);
@@ -98,7 +82,7 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 		int falseNegative = 0;
 		int falsePositive = 0;
 
-		for (Message message: spam ) {
+		for (Message message: spam) {
 			double aux = 0;
 			for (int index = 0; index != rules.size(); index++) {
 				if(message.matchesRule(rules.get(index))) {
