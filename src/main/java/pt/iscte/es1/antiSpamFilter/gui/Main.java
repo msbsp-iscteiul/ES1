@@ -110,6 +110,7 @@ public class Main extends Application {
         
         TextField textField = new TextField();
         textField.setPrefWidth(275);
+        textField.setEditable(false);
         grid.add(textField, col++, row);
         
         Button button = new Button(textButton);
@@ -120,9 +121,7 @@ public class Main extends Application {
 			public void handle(ActionEvent event) {
 				File file = fileChooser(stage, textLabel);
 				if (file != null) {
-					System.out.println("File Path is: " + file.getAbsolutePath());
 					textField.setText(file.getAbsolutePath());
-					System.out.println("File Name is: " + file.getName());
 				}
 			}
 			
