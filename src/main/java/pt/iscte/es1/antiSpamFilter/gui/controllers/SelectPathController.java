@@ -28,6 +28,10 @@ public class SelectPathController {
 		Platform.exit();
 	}
 
+        private Stage getStage() {
+                return (Stage) rulesPath.getScene().getWindow();
+        }
+
 	@FXML
 	protected void handleContinue() {
 		// TODO
@@ -35,7 +39,7 @@ public class SelectPathController {
 
 	@FXML
 	protected void handleRulesPath() {
-		File file = fileChooser((Stage) rulesPath.getScene().getWindow(), "Rules");
+                File file = fileChooser(getStage(), "Rules", "Rules.cf", "*.cf");
 		if (file != null) {
 			rulesPath.setText(file.getAbsolutePath());
 		}
@@ -43,7 +47,7 @@ public class SelectPathController {
 
 	@FXML
 	protected void handleSpamPath() {
-		File file = fileChooser((Stage) spamPath.getScene().getWindow(), "Spam.log");
+                File file = fileChooser(getStage(), "Spam", "Spam.log", "*.log");
 		if (file != null) {
 			spamPath.setText(file.getAbsolutePath());
 		}
@@ -51,30 +55,25 @@ public class SelectPathController {
 
 	@FXML
 	protected void handleHamPath() {
-		File file = fileChooser((Stage) hamPath.getScene().getWindow(), "Ham.log");
+                File file = fileChooser(getStage(), "Ham", "Ham.log", "*.log");
 		if (file != null) {
 			hamPath.setText(file.getAbsolutePath());
 		}
 	}
 
-
-
 	/**
-	 * File Chooser which returns a File that the user selects. The only files that are allowed are: .log and .cf.
+	 * File Chooser which returns a File that the user selects.
 	 * @param stage - Primary Stage which is associated with the main Stage, i.e., where the buttons are located
-	 * @return {File} - File that the user as selected
+	 * @param title - File chooser title
+	 * @param name - File name example
+	 * @param extensions - Extensions allowed
+	 * @return the selected file or null if no file has been selected
 	 */
-	private File fileChooser(Stage stage, String text) {
+	private File fileChooser(Stage stage, String title, String name, String extensions) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Log Files");
-		fileChooser.setInitialDirectory(
-				new File(System.getProperty("user.home"))
-		);
-		if (text.contains("Rules")) {
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Rules", "*.cf"));
-		} else {
-			fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Log", "*.log"));
-		}
+		fileChooser.setTitle(title);
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(name, extensions));
 		return fileChooser.showOpenDialog(stage);
 	}
 
