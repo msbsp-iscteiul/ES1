@@ -1,13 +1,20 @@
 package pt.iscte.es1.antiSpamFilter.gui.controllers;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 
 public class SelectPathController {
 
@@ -28,18 +35,30 @@ public class SelectPathController {
 		Platform.exit();
 	}
 
-        private Stage getStage() {
-                return (Stage) rulesPath.getScene().getWindow();
-        }
+	private Stage getStage() {
+		return (Stage) rulesPath.getScene().getWindow();
+	}
 
 	@FXML
-	protected void handleContinue() {
-		// TODO
+	protected void handleContinue(ActionEvent actionEvent) throws IOException {
+		openSpamConfiguration(actionEvent);
+	}
+
+	private void openSpamConfiguration(ActionEvent actionEvent) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("template/calculator.fxml"));
+		Parent parent = loader.load();
+		Scene spamConfigurationScene = new Scene(parent);
+
+		CalculatorController calculatorController = loader.getController();
+		calculatorController.initData(((Node) actionEvent.getSource()).getScene());
+
+		Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+		window.setScene(spamConfigurationScene);
 	}
 
 	@FXML
 	protected void handleRulesPath() {
-                File file = fileChooser(getStage(), "Rules", "Rules.cf", "*.cf");
+		File file = fileChooser(getStage(), "Rules", "Rules.cf", "*.cf");
 		if (file != null) {
 			rulesPath.setText(file.getAbsolutePath());
 		}
@@ -47,7 +66,7 @@ public class SelectPathController {
 
 	@FXML
 	protected void handleSpamPath() {
-                File file = fileChooser(getStage(), "Spam", "Spam.log", "*.log");
+		File file = fileChooser(getStage(), "Spam", "Spam.log", "*.log");
 		if (file != null) {
 			spamPath.setText(file.getAbsolutePath());
 		}
@@ -55,7 +74,7 @@ public class SelectPathController {
 
 	@FXML
 	protected void handleHamPath() {
-                File file = fileChooser(getStage(), "Ham", "Ham.log", "*.log");
+		File file = fileChooser(getStage(), "Ham", "Ham.log", "*.log");
 		if (file != null) {
 			hamPath.setText(file.getAbsolutePath());
 		}
