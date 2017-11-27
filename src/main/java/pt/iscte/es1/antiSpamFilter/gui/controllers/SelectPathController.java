@@ -9,17 +9,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import pt.iscte.es1.antiSpamFilter.domain.ExperimentContext;
+import pt.iscte.es1.antiSpamFilter.domain.Message;
+import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
+import pt.iscte.es1.antiSpamFilter.infrastructure.AntiSpamFileReader;
+import pt.iscte.es1.antiSpamFilter.infrastructure.LogParser;
+import pt.iscte.es1.antiSpamFilter.infrastructure.RuleParser;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
+/**
+ * Handles the file chooser scene
+ */
 public class SelectPathController {
-
-	@FXML
-	private Button continueButton;
 
 	@FXML
 	private TextField rulesPath;
@@ -30,32 +37,62 @@ public class SelectPathController {
 	@FXML
 	private TextField hamPath;
 
-	@FXML
-	protected void handleClose() {
-		Platform.exit();
-	}
-
 	private Stage getStage() {
 		return (Stage) rulesPath.getScene().getWindow();
 	}
 
-	@FXML
-	protected void handleContinue(ActionEvent actionEvent) throws IOException {
-		openSpamConfiguration(actionEvent);
+	/**
+	 * Creates an {@link ExperimentContext} with the results of the selected files
+	 * @return the context
+	 * @throws IOException
+	 */
+	private ExperimentContext createContext() throws IOException {
+		List<WeightedRule> rules = new AntiSpamFileReader<>(new RuleParser()).readFile(new FileReader(rulesPath.getText()));
+		List<Message> spam = new AntiSpamFileReader<>(new LogParser()).readFile(new FileReader(spamPath.getText()));
+		List<Message> ham = new AntiSpamFileReader<>(new LogParser()).readFile(new FileReader(hamPath.getText()));
+		return new ExperimentContext(ham, spam, rules);
 	}
 
-	private void openSpamConfiguration(ActionEvent actionEvent) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("template/calculator.fxml"));
+	/**
+	 * Opens the spam configuration scene
+	 * @param actionEvent the fired event
+	 * @param context {@link ExperimentContext} to feed the spam configuration scene
+	 * @throws IOException
+	 */
+	private void openSpamConfiguration(ActionEvent actionEvent, ExperimentContext context) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("template/spam_configuration.fxml"));
 		Parent parent = loader.load();
 		Scene spamConfigurationScene = new Scene(parent);
 
-		CalculatorController calculatorController = loader.getController();
-		calculatorController.initData(((Node) actionEvent.getSource()).getScene());
+		SpamConfigurationController spamConfigurationController = loader.getController();
+		spamConfigurationController.initData(((Node) actionEvent.getSource()).getScene(), context);
 
 		Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 		window.setScene(spamConfigurationScene);
 	}
 
+	/**
+	 * Handles the intent to configure the spam
+	 * @param actionEvent the fired event
+	 * @throws IOException
+	 */
+	@FXML
+	protected void handleContinue(ActionEvent actionEvent) throws IOException {
+		final ExperimentContext context = createContext();
+		openSpamConfiguration(actionEvent, context);
+	}
+
+	/**
+	 * Closes the application
+	 */
+	@FXML
+	protected void handleClose() {
+		Platform.exit();
+	}
+
+	/**
+	 * Handles the rules file chooser
+	 */
 	@FXML
 	protected void handleRulesPath() {
 		File file = fileChooser(getStage(), "Rules", "Rules.cf", "*.cf");
@@ -64,6 +101,9 @@ public class SelectPathController {
 		}
 	}
 
+	/**
+	 * Handles the spam file chooser
+	 */
 	@FXML
 	protected void handleSpamPath() {
 		File file = fileChooser(getStage(), "Spam", "Spam.log", "*.log");
@@ -72,6 +112,9 @@ public class SelectPathController {
 		}
 	}
 
+	/**
+	 * Handles the ham file chooser
+	 */
 	@FXML
 	protected void handleHamPath() {
 		File file = fileChooser(getStage(), "Ham", "Ham.log", "*.log");

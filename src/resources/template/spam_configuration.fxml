@@ -11,20 +11,21 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.iscte.es1.antiSpamFilter.gui.controllers.CalculatorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.iscte.es1.antiSpamFilter.gui.controllers.SpamConfigurationController">
    <center>
-      <TableView id="RulesWeights" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn editable="false" text="Rules" />
-          <TableColumn prefWidth="75.0" text="Weights" />
+          <TableColumn fx:id="rulesColumn" editable="false" text="Rules" />
+          <TableColumn fx:id="weightsColumn" text="Weights" />
         </columns>
       </TableView>
    </center>
    <right>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Button id="Random" mnemonicParsing="false" text="Random" />
-            <Button id="NSGA" mnemonicParsing="false" text="NSGA-II" />
+            <Button mnemonicParsing="false" onAction="#handleRandom" text="Random" />
+            <Button mnemonicParsing="false" onAction="#handleNSGAII" text="NSGA-II" />
+            <Button mnemonicParsing="false" onAction="#handleEvaluation" text="Evaluate" />
          </children>
       </VBox>
    </right>
@@ -41,10 +42,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="falsePositivesLabel" text="False positives" />
-                  <Label id="FalsePositivesQuantity" text="Number of False Positives" GridPane.columnIndex="1" />
-                  <Label id="FalseNegativesLabel" text="False negatives" GridPane.rowIndex="1" />
-                  <Label id="FalseNegativesQuantity" text="Number of false negatives" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="False positives" />
+                  <Label fx:id="falsePositivesQuantity" text="0" GridPane.columnIndex="1" />
+                  <Label text="False negatives" GridPane.rowIndex="1" />
+                  <Label fx:id="falseNegativesQuantity" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <GridPane HBox.hgrow="ALWAYS">
