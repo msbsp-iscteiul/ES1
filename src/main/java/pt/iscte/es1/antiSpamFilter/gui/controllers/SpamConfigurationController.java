@@ -66,6 +66,7 @@ public class SpamConfigurationController implements Initializable {
 		this.context = context;
 		this.problem = new AntiSpamFilterProblem(context.getWeightedRules(), context.getHam(), context.getSpam());
 		tableView.getItems().addAll(context.getWeightedRules());
+		handleEvaluation();
 	}
 
 	/**
