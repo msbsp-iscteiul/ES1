@@ -28,6 +28,11 @@ import java.util.List;
  */
 public class SelectPathController {
 
+	private static final AntiSpamFileReader<WeightedRule> RULES_READER =
+		new AntiSpamFileReader<>(new RuleParser());
+	private static final AntiSpamFileReader<Message> MESSAGE_READER =
+		new AntiSpamFileReader<>(new LogParser());
+
 	@FXML
 	private TextField rulesPath;
 
@@ -37,20 +42,20 @@ public class SelectPathController {
 	@FXML
 	private TextField hamPath;
 
-	private Stage getStage() {
-		return (Stage) rulesPath.getScene().getWindow();
-	}
-
 	/**
 	 * Creates an {@link ExperimentContext} with the results of the selected files
 	 * @return the context
 	 * @throws IOException
 	 */
 	private ExperimentContext createContext() throws IOException {
-		List<WeightedRule> rules = new AntiSpamFileReader<>(new RuleParser()).readFile(new FileReader(rulesPath.getText()));
-		List<Message> spam = new AntiSpamFileReader<>(new LogParser()).readFile(new FileReader(spamPath.getText()));
-		List<Message> ham = new AntiSpamFileReader<>(new LogParser()).readFile(new FileReader(hamPath.getText()));
+		final List<Message> ham = MESSAGE_READER.readFile(new FileReader(hamPath.getText()));
+		final List<Message> spam = MESSAGE_READER.readFile(new FileReader(spamPath.getText()));
+		final List<WeightedRule> rules = RULES_READER.readFile(new FileReader(rulesPath.getText()));
 		return new ExperimentContext(ham, spam, rules);
+	}
+
+	private Stage getStage() {
+		return (Stage) rulesPath.getScene().getWindow();
 	}
 
 	/**
