@@ -13,10 +13,10 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.iscte.es1.antiSpamFilter.gui.controllers.SpamConfigurationController">
    <center>
-      <TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" >
         <columns>
-          <TableColumn fx:id="rulesColumn" editable="false" text="Rules" />
-          <TableColumn fx:id="weightsColumn" text="Weights" />
+          <TableColumn resizable="false" fx:id="rulesColumn" editable="false" prefWidth="${tableView.width*0.6-10.0}" text="Rules" />
+          <TableColumn resizable="false" fx:id="weightsColumn" prefWidth="${tableView.width*0.4-10.0}" text="Weights" />
         </columns>
       </TableView>
    </center>
