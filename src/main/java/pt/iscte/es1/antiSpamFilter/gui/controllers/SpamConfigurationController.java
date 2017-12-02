@@ -3,20 +3,32 @@ package pt.iscte.es1.antiSpamFilter.gui.controllers;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.domain.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
+import sun.security.krb5.internal.crypto.Des;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
@@ -78,6 +90,27 @@ public class SpamConfigurationController implements Initializable {
 		window.setScene(parentScene);
 	}
 
+
+	/**
+	 * Shows the Boxplot Graph
+	 *
+	 * @throws IOException
+	 */
+	private void showBoxplot() {
+		Runtime rt = Runtime.getRuntime();
+		Process process = null;
+		try {
+			process = rt.exec("Rscript HV.Boxplot.R", null,
+                new File("experimentBaseDirectory/AntiSpamStudy/R"));
+			if (process != null) {
+				Desktop.getDesktop().open(new File("experimentBaseDirectory/AntiSpamStudy/R/HV.Boxplot.eps"));
+			}
+		} catch (IOException e) {
+			
+		}
+
+	}
+
 	/**
 	 * Generates weights with a normal distribution
 	 */
@@ -97,6 +130,9 @@ public class SpamConfigurationController implements Initializable {
 	public void handleNSGAII(ActionEvent actionEvent) {
 		// TODO
 		handleEvaluation();
+
+		// Show Boxplot after execution
+		showBoxplot();
 	}
 
 	/**
