@@ -6,9 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import org.uma.jmetal.solution.DoubleSolution;
@@ -16,8 +14,12 @@ import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.domain.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
+import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -58,8 +60,9 @@ public class SpamConfigurationController implements Initializable {
 
 	/**
 	 * Hidrates this controller with necessary data
+	 *
 	 * @param parentScene reference to the file selector stage
-	 * @param context context with spam, ham and rules
+	 * @param context     context with spam, ham and rules
 	 */
 	void initData(Scene parentScene, ExperimentContext context) {
 		this.parentScene = parentScene;
@@ -71,6 +74,7 @@ public class SpamConfigurationController implements Initializable {
 
 	/**
 	 * Returns to the file selector stage
+	 *
 	 * @param actionEvent fired event
 	 */
 	public void cancel(ActionEvent actionEvent) {
@@ -117,5 +121,28 @@ public class SpamConfigurationController implements Initializable {
 			solution.setVariableValue(i, context.getWeightedRules().get(i).getWeight());
 		}
 		return solution;
+	}
+
+	public void save() throws IOException {
+		Alert alertSave = new Alert(Alert.AlertType.CONFIRMATION);
+		alertSave.setTitle("Confirm Save");
+		alertSave.setHeaderText("Are you sure you want to save this configuration??");
+
+		Optional<ButtonType> result = alertSave.showAndWait();
+
+		if (!result.isPresent() || result.get() != ButtonType.OK) {
+			return;
+		}
+
+		FileWriter fw = new FileWriter(context.getRulesPath(), false);
+		RulesWriter rw = new RulesWriter(fw);
+		rw.write(context.getWeightedRules());
+
+		Alert alertConfirmation = new Alert(Alert.AlertType.INFORMATION);
+		alertConfirmation.setTitle("Result Save");
+		alertConfirmation.setHeaderText("Configuration saved with success!!");
+		alertConfirmation.showAndWait();
+
+
 	}
 }
