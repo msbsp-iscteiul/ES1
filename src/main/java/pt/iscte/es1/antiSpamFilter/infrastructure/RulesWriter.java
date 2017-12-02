@@ -8,7 +8,7 @@ import java.util.List;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
 /**
- * Writes rules and its weights to a file 
+ * Writes rules and its weights to a file
  */
 public class RulesWriter {
 
@@ -23,7 +23,8 @@ public class RulesWriter {
 
 	/**
 	 * Writes to {@link Writer} support
-	 * @param writer
+	 *
+	 * @param weightedRules
 	 * @throws IOException
 	 */
 	public void write(List<WeightedRule> weightedRules) throws IOException {

@@ -8,6 +8,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -32,6 +34,8 @@ import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.awt.*;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -80,7 +84,7 @@ public class SpamConfigurationController implements Initializable {
 	 * Hidrates this controller with necessary data
 	 *
 	 * @param parentScene reference to the file selector stage
-	 * @param context     context with spam, ham and rules
+	 * @param context context with spam, ham and rules
 	 */
 	void initData(Scene parentScene, ExperimentContext context) {
 		this.parentScene = parentScene;
@@ -118,8 +122,8 @@ public class SpamConfigurationController implements Initializable {
 		} catch (IOException e) {
 
 		}
-
 	}
+
 
 	/**
 	 * Generates weights with a normal distribution
@@ -138,6 +142,7 @@ public class SpamConfigurationController implements Initializable {
 	 * Generates weights with NSGA-II algorithm
 	 */
 	public void handleNSGAII(ActionEvent actionEvent) {
+		// TODO
 		handleEvaluation();
 
 		// Show Boxplot after execution
