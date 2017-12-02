@@ -25,6 +25,7 @@ import pt.iscte.es1.antiSpamFilter.AntiSpamFilterConstants;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.domain.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
+import pt.iscte.es1.antiSpamFilter.gui.AlertMessage;
 import sun.security.krb5.internal.crypto.Des;
 import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
@@ -34,7 +35,10 @@ import java.io.IOException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -172,11 +176,8 @@ public class SpamConfigurationController implements Initializable {
 	 */
 
 	public void save() throws IOException {
-		Alert alertSave = new Alert(Alert.AlertType.CONFIRMATION);
-		alertSave.setTitle("Confirm Save");
-		alertSave.setHeaderText("Are you sure you want to save this configuration??");
-
-		Optional<ButtonType> result = alertSave.showAndWait();
+		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION, "Confirm Save", "Are you sure you want to save this configuration??")
+			.showAndWait();
 
 		if (!result.isPresent() || result.get() != ButtonType.OK) {
 			return;
@@ -186,10 +187,8 @@ public class SpamConfigurationController implements Initializable {
 		RulesWriter rw = new RulesWriter(fw);
 		rw.write(context.getWeightedRules());
 
-		Alert alertConfirmation = new Alert(Alert.AlertType.INFORMATION);
-		alertConfirmation.setTitle("Result Save");
-		alertConfirmation.setHeaderText("Configuration saved with success!!");
-		alertConfirmation.showAndWait();
+		new AlertMessage(Alert.AlertType.INFORMATION, "Result Save", "Configuration saved with success!!")
+			.showAndWait();
 	}
 
 	/**
