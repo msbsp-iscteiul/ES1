@@ -1,7 +1,5 @@
 package pt.iscte.es1.antiSpamFilter;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,10 +17,6 @@ import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
  */
 @SuppressWarnings("serial")
 public class AntiSpamFilterProblem extends AbstractDoubleProblem {
-
-	public static final int INDEX_FALSE_NEGATIVE = 0;
-	public static final int INDEX_FALSE_POSITIVE = 1;
-	public static final double THRESHOLD = 5.0;
 
 	private final List<Message> spam;
 	private final List<Message> ham;
@@ -48,8 +42,8 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 		setNumberOfObjectives(2);
 		setName("AntiSpamFilterProblem");
 
-		List<Double> lowerLimit = Collections.nCopies(rules.size(), -THRESHOLD);
-		List<Double> upperLimit = Collections.nCopies(rules.size(), THRESHOLD);
+		List<Double> lowerLimit = Collections.nCopies(rules.size(), -AntiSpamFilterConstants.THRESHOLD);
+		List<Double> upperLimit = Collections.nCopies(rules.size(), AntiSpamFilterConstants.THRESHOLD);
 
 		setLowerLimit(lowerLimit);
 		setUpperLimit(upperLimit);
@@ -90,7 +84,7 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 				}
 			}
 
-			if(aux < THRESHOLD) {
+			if(aux < AntiSpamFilterConstants.THRESHOLD) {
 				falseNegative++;
 			}
 		}
@@ -103,12 +97,12 @@ public class AntiSpamFilterProblem extends AbstractDoubleProblem {
 				}
 			}
 
-			if(aux > THRESHOLD) {
+			if(aux > AntiSpamFilterConstants.THRESHOLD) {
 				falsePositive++;
 			}
 		}
 
-		solution.setObjective(INDEX_FALSE_NEGATIVE, falseNegative);
-		solution.setObjective(INDEX_FALSE_POSITIVE, falsePositive);
+		solution.setObjective(AntiSpamFilterConstants.INDEX_FALSE_NEGATIVE, falseNegative);
+		solution.setObjective(AntiSpamFilterConstants.INDEX_FALSE_POSITIVE, falsePositive);
 	}
 }

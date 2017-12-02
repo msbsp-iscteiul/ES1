@@ -11,6 +11,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
+import pt.iscte.es1.antiSpamFilter.AntiSpamFilterConstants;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.domain.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
@@ -87,7 +88,7 @@ public class SpamConfigurationController implements Initializable {
 	public void handleRandom() {
 		context.getWeightedRules().forEach(weightedRule -> {
 			final double randomWeight = ThreadLocalRandom.current().nextDouble(
-				-AntiSpamFilterProblem.THRESHOLD, AntiSpamFilterProblem.THRESHOLD);
+				-AntiSpamFilterConstants.THRESHOLD, AntiSpamFilterConstants.THRESHOLD);
 			weightedRule.setWeight(randomWeight);
 		});
 		tableView.refresh();
@@ -108,9 +109,9 @@ public class SpamConfigurationController implements Initializable {
 		final DoubleSolution solution = createSolutionFromWeightedRules();
 		problem.evaluate(solution);
 		falsePositivesQuantity.setText(String.valueOf(
-			solution.getObjective(AntiSpamFilterProblem.INDEX_FALSE_POSITIVE)));
+			solution.getObjective(AntiSpamFilterConstants.INDEX_FALSE_POSITIVE)));
 		falseNegativesQuantity.setText(String.valueOf(
-			solution.getObjective(AntiSpamFilterProblem.INDEX_FALSE_NEGATIVE)));
+			solution.getObjective(AntiSpamFilterConstants.INDEX_FALSE_NEGATIVE)));
 	}
 
 	/**
