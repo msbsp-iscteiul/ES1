@@ -25,11 +25,15 @@ import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.domain.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 import sun.security.krb5.internal.crypto.Des;
+import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -70,8 +74,9 @@ public class SpamConfigurationController implements Initializable {
 
 	/**
 	 * Hidrates this controller with necessary data
+	 *
 	 * @param parentScene reference to the file selector stage
-	 * @param context context with spam, ham and rules
+	 * @param context     context with spam, ham and rules
 	 */
 	void initData(Scene parentScene, ExperimentContext context) {
 		this.parentScene = parentScene;
@@ -83,6 +88,7 @@ public class SpamConfigurationController implements Initializable {
 
 	/**
 	 * Returns to the file selector stage
+	 *
 	 * @param actionEvent fired event
 	 */
 	public void cancel(ActionEvent actionEvent) {
@@ -106,7 +112,7 @@ public class SpamConfigurationController implements Initializable {
 				Desktop.getDesktop().open(new File("experimentBaseDirectory/AntiSpamStudy/R/HV.Boxplot.eps"));
 			}
 		} catch (IOException e) {
-			
+
 		}
 
 	}
@@ -153,5 +159,28 @@ public class SpamConfigurationController implements Initializable {
 			solution.setVariableValue(i, context.getWeightedRules().get(i).getWeight());
 		}
 		return solution;
+	}
+
+	public void save() throws IOException {
+		Alert alertSave = new Alert(Alert.AlertType.CONFIRMATION);
+		alertSave.setTitle("Confirm Save");
+		alertSave.setHeaderText("Are you sure you want to save this configuration??");
+
+		Optional<ButtonType> result = alertSave.showAndWait();
+
+		if (!result.isPresent() || result.get() != ButtonType.OK) {
+			return;
+		}
+
+		FileWriter fw = new FileWriter(context.getRulesPath(), false);
+		RulesWriter rw = new RulesWriter(fw);
+		rw.write(context.getWeightedRules());
+
+		Alert alertConfirmation = new Alert(Alert.AlertType.INFORMATION);
+		alertConfirmation.setTitle("Result Save");
+		alertConfirmation.setHeaderText("Configuration saved with success!!");
+		alertConfirmation.showAndWait();
+
+
 	}
 }

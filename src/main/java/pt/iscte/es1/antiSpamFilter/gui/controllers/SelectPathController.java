@@ -51,7 +51,7 @@ public class SelectPathController {
 		final List<Message> ham = MESSAGE_READER.readFile(new FileReader(hamPath.getText()));
 		final List<Message> spam = MESSAGE_READER.readFile(new FileReader(spamPath.getText()));
 		final List<WeightedRule> rules = RULES_READER.readFile(new FileReader(rulesPath.getText()));
-		return new ExperimentContext(ham, spam, rules);
+		return new ExperimentContext(ham, spam, rules, new File(rulesPath.getText()));
 	}
 
 	private Stage getStage() {
