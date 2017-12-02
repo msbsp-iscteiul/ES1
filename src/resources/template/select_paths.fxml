@@ -21,22 +21,22 @@
     <Text id="select-path-text" text="Select Paths"
           GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3"/>
 
-    <Label text="Rules Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <Label text="Rules.cf Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     <TextField fx:id="rulesPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
     <HBox GridPane.columnIndex="2" GridPane.rowIndex="1">
-        <Button prefWidth="100" text="Rules File" onAction="#handleRulesPath"/>
+        <Button prefWidth="100" text="Select" onAction="#handleRulesPath"/>
     </HBox>
 
     <Label text="Spam.log Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
     <TextField fx:id="spamPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
     <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
-        <Button prefWidth="100" text="Spam.log File" onAction="#handleSpamPath"/>
+        <Button prefWidth="100" text="Select" onAction="#handleSpamPath"/>
     </HBox>
 
     <Label text="Ham.log Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
     <TextField fx:id="hamPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
     <HBox GridPane.columnIndex="2" GridPane.rowIndex="3">
-        <Button prefWidth="100" text="Ham.log File" onAction="#handleHamPath"/>
+        <Button prefWidth="100" text="Select" onAction="#handleHamPath"/>
     </HBox>
 
     <HBox prefWidth="75" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4">

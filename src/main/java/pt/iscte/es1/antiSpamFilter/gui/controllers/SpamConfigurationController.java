@@ -19,8 +19,7 @@ import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -99,7 +98,6 @@ public class SpamConfigurationController implements Initializable {
 	 * Generates weights with NSGA-II algorithm
 	 */
 	public void handleNSGAII(ActionEvent actionEvent) {
-		// TODO
 		handleEvaluation();
 	}
 
@@ -115,6 +113,11 @@ public class SpamConfigurationController implements Initializable {
 			solution.getObjective(AntiSpamFilterProblem.INDEX_FALSE_NEGATIVE)));
 	}
 
+	/**
+	 * Generate a solution from the weigthed rules
+	 *
+	 * @return a solution that contains a weight for each rule
+	 */
 	private DoubleSolution createSolutionFromWeightedRules() {
 		final DoubleSolution solution = new DefaultDoubleSolution(problem);
 		for (int i = 0; i < context.getWeightedRules().size(); ++i) {
@@ -122,6 +125,12 @@ public class SpamConfigurationController implements Initializable {
 		}
 		return solution;
 	}
+
+	/**
+	 * Save the current configuration on rules.cf
+	 *
+	 * @throws IOException if not able to save the configuration
+	 */
 
 	public void save() throws IOException {
 		Alert alertSave = new Alert(Alert.AlertType.CONFIRMATION);
@@ -142,7 +151,23 @@ public class SpamConfigurationController implements Initializable {
 		alertConfirmation.setTitle("Result Save");
 		alertConfirmation.setHeaderText("Configuration saved with success!!");
 		alertConfirmation.showAndWait();
+	}
 
+	/**
+	 * Allow user to select the profile to be used
+	 *
+	 * @return the selected profile
+	 */
+	private String chooseProfile() {
 
+		List<String> choices = Arrays.asList("Leisure", "Professional", "Intermediate");
+
+		ChoiceDialog<String> profileSelector = new ChoiceDialog<>("Leisure", choices);
+		profileSelector.setTitle("Profile");
+		profileSelector.setHeaderText("Choose profile");
+
+		Optional<String> result = profileSelector.showAndWait();
+
+		return result.orElse(null);
 	}
 }
