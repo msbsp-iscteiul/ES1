@@ -15,14 +15,14 @@ public class ProfessionalStrategy implements ResultSelectorStrategy {
 	@Override
 	public int matchFor(List<PositiveNegativeSet> resultQualityList) {
 		final Double minimumPositives = resultQualityList.stream()
-			.map(PositiveNegativeSet::getPositive)
+			.map(PositiveNegativeSet::getFalsePositives)
 			.sorted(Double::compare)
 			.findFirst().get();
 		final PositiveNegativeSet optimalPoint = resultQualityList.stream()
 			// get all that have the minimum value
-			.filter(positiveNegativeSet -> positiveNegativeSet.getPositive().equals(minimumPositives))
+			.filter(positiveNegativeSet -> positiveNegativeSet.getFalsePositives().equals(minimumPositives))
 			// break the tie by selecting lowest false negatives
-			.sorted(Comparator.comparingDouble(PositiveNegativeSet::getNegative))
+			.sorted(Comparator.comparingDouble(PositiveNegativeSet::getFalseNegatives))
 			.findFirst().get();
 		return resultQualityList.indexOf(optimalPoint);
 	}
