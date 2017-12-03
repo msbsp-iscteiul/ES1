@@ -15,14 +15,14 @@ public class LeisureStrategy implements ResultSelectorStrategy {
 	@Override
 	public int matchFor(List<PositiveNegativeSet> resultQualityList) {
 		final Double minimumNegatives = resultQualityList.stream()
-			.map(PositiveNegativeSet::getNegative)
+			.map(PositiveNegativeSet::getFalseNegatives)
 			.sorted(Double::compare)
 			.findFirst().get();
 		final PositiveNegativeSet optimalPoint = resultQualityList.stream()
 			// get all that have the minimum value
-			.filter(positiveNegativeSet -> positiveNegativeSet.getNegative().equals(minimumNegatives))
+			.filter(positiveNegativeSet -> positiveNegativeSet.getFalseNegatives().equals(minimumNegatives))
 			// break the tie by selecting lowest false positives
-			.sorted(Comparator.comparingDouble(PositiveNegativeSet::getPositive))
+			.sorted(Comparator.comparingDouble(PositiveNegativeSet::getFalsePositives))
 			.findFirst().get();
 		return resultQualityList.indexOf(optimalPoint);
 	}
