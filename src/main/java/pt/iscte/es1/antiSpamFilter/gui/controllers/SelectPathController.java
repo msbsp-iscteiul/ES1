@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,6 +21,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 /**
  * Handles the file chooser scene
@@ -32,6 +32,9 @@ public class SelectPathController {
 		new AntiSpamFileReader<>(new RuleParser());
 	private static final AntiSpamFileReader<Message> MESSAGE_READER =
 		new AntiSpamFileReader<>(new LogParser());
+	private static final Preferences USER_PREFERENCES = Preferences.userRoot()
+		.node(SelectPathController.class.getName());
+	private static final String LAST_USED_FOLDER = "LAST_USED_FOLDER";
 
 	@FXML
 	private TextField rulesPath;
@@ -103,6 +106,7 @@ public class SelectPathController {
 		File file = fileChooser(getStage(), "Rules", "Rules.cf", "*.cf");
 		if (file != null) {
 			rulesPath.setText(file.getAbsolutePath());
+			updateLastFolderPreference(file.getParent());
 		}
 	}
 
@@ -114,6 +118,7 @@ public class SelectPathController {
 		File file = fileChooser(getStage(), "Spam", "Spam.log", "*.log");
 		if (file != null) {
 			spamPath.setText(file.getAbsolutePath());
+			updateLastFolderPreference(file.getParent());
 		}
 	}
 
@@ -125,7 +130,16 @@ public class SelectPathController {
 		File file = fileChooser(getStage(), "Ham", "Ham.log", "*.log");
 		if (file != null) {
 			hamPath.setText(file.getAbsolutePath());
+			updateLastFolderPreference(file.getParent());
 		}
+	}
+
+	/**
+	 * Update last used folder when opening a file
+	 * @param lastUsedFolder last used folder for opening a file
+	 */
+	private static void updateLastFolderPreference(String lastUsedFolder) {
+		USER_PREFERENCES.put(LAST_USED_FOLDER, lastUsedFolder);
 	}
 
 	/**
@@ -139,7 +153,9 @@ public class SelectPathController {
 	private File fileChooser(Stage stage, String title, String name, String extensions) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
-		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.setInitialDirectory(new File(
+			USER_PREFERENCES.get(LAST_USED_FOLDER, System.getProperty("user.home"))
+		));
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(name, extensions));
 		return fileChooser.showOpenDialog(stage);
 	}
