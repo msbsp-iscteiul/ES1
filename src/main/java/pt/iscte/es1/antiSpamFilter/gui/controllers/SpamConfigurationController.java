@@ -28,6 +28,8 @@ import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.infrastructure.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 import pt.iscte.es1.antiSpamFilter.gui.AlertMessage;
+import pt.iscte.es1.antiSpamFilter.infrastructure.NsgaRToEpsCompiler;
+import pt.iscte.es1.antiSpamFilter.infrastructure.NsgaTexToPdfCompiler;
 import sun.security.krb5.internal.crypto.Des;
 import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
@@ -104,27 +106,6 @@ public class SpamConfigurationController implements Initializable {
 		window.setScene(parentScene);
 	}
 
-
-	/**
-	 * Shows the Boxplot Graph
-	 *
-	 * @throws IOException
-	 */
-	private void showBoxplot() {
-		Runtime rt = Runtime.getRuntime();
-		Process process = null;
-		try {
-			process = rt.exec("Rscript HV.Boxplot.R", null,
-                new File("experimentBaseDirectory/AntiSpamStudy/R"));
-			if (process != null) {
-				Desktop.getDesktop().open(new File("experimentBaseDirectory/AntiSpamStudy/R/HV.Boxplot.eps"));
-			}
-		} catch (IOException e) {
-
-		}
-	}
-
-
 	/**
 	 * Generates weights with a normal distribution
 	 */
@@ -142,11 +123,17 @@ public class SpamConfigurationController implements Initializable {
 	 * Generates weights with NSGA-II algorithm
 	 */
 	public void handleNSGAII(ActionEvent actionEvent) {
+		// Choose profile for User
+		chooseProfile();
+
 		// TODO
 		handleEvaluation();
 
-		// Show Boxplot after execution
-		showBoxplot();
+		// After calculation its necessary to compile the R file and present it to the user
+		new NsgaRToEpsCompiler().compileAndShow();
+
+		// After calculation its necessary to compile Tex file and present it to user
+		new NsgaTexToPdfCompiler().compileAndShow();
 	}
 
 	/**
@@ -181,8 +168,8 @@ public class SpamConfigurationController implements Initializable {
 	 */
 
 	public void save() throws IOException {
-		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION, "Confirm Save", "Are you sure you want to save this configuration??")
-			.showAndWait();
+		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION,"Confirm Save",
+			"Are you sure you want to save this configuration??").showAndWait();
 
 		if (!result.isPresent() || result.get() != ButtonType.OK) {
 			return;
@@ -192,8 +179,8 @@ public class SpamConfigurationController implements Initializable {
 		RulesWriter rw = new RulesWriter(fw);
 		rw.write(context.getWeightedRules());
 
-		new AlertMessage(Alert.AlertType.INFORMATION, "Result Save", "Configuration saved with success!!")
-			.showAndWait();
+		new AlertMessage(Alert.AlertType.INFORMATION,
+			"Result Save", "Configuration saved with success!!").showAndWait();
 	}
 
 	/**
