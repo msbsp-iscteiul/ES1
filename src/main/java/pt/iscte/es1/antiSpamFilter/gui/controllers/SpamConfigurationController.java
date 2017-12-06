@@ -27,6 +27,10 @@ import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
 import java.io.IOException;
 import java.io.FileWriter;
+import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -73,7 +77,7 @@ public class SpamConfigurationController implements Initializable {
 	 * Hidrates this controller with necessary data
 	 *
 	 * @param parentScene reference to the file selector stage
-	 * @param context context with spam, ham and rules
+	 * @param context     context with spam, ham and rules
 	 */
 	void initData(Scene parentScene, ExperimentContext context) {
 		this.parentScene = parentScene;
