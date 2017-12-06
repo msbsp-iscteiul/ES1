@@ -13,7 +13,7 @@ import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterConstants;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
-import pt.iscte.es1.antiSpamFilter.domain.ExperimentContext;
+import pt.iscte.es1.antiSpamFilter.infrastructure.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 import pt.iscte.es1.antiSpamFilter.gui.AlertMessage;
 import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;

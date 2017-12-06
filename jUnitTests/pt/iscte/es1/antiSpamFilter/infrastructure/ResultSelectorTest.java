@@ -2,7 +2,7 @@ package pt.iscte.es1.antiSpamFilter.infrastructure;
 
 import org.junit.Test;
 import pt.iscte.es1.antiSpamFilter.domain.PositiveNegativeSet;
-import pt.iscte.es1.antiSpamFilter.domain.ResultWeightComposite;
+import pt.iscte.es1.antiSpamFilter.domain.Solution;
 import pt.iscte.es1.antiSpamFilter.infrastructure.result_selector_strategies.LeisureStrategy;
 
 import java.io.IOException;
@@ -27,11 +27,11 @@ public class ResultSelectorTest {
 		final List<PositiveNegativeSet> positiveNegativeSets = new AntiSpamFileReader<>(new PositiveNegativeParser())
 			.readFile(new StringReader(qualityPoints));
 		final ExperimentResultWeightsParser experimentResultWeightsParser = new ExperimentResultWeightsParser();
-		final List<ResultWeightComposite> weightComposites = new AntiSpamFileReader<>(experimentResultWeightsParser)
+		final List<Solution> weightComposites = new AntiSpamFileReader<>(experimentResultWeightsParser)
 			.readFile(new StringReader(qualityPointsWeights));
 		final ResultSelector rs = new ResultSelector(new LeisureStrategy());
-		final ResultWeightComposite match = rs.selectFromResults(positiveNegativeSets, weightComposites);
-		final ResultWeightComposite shouldMatch = experimentResultWeightsParser.parse(selectedMatch);
+		final Solution match = rs.selectFromResults(positiveNegativeSets, weightComposites);
+		final Solution shouldMatch = experimentResultWeightsParser.parse(selectedMatch);
 		assertEquals(shouldMatch, match);
 	}
 }
