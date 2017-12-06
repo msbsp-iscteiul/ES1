@@ -153,7 +153,6 @@ public class SpamConfigurationController implements Initializable {
 	 *
 	 * @throws IOException if not able to save the configuration
 	 */
-
 	public void save() throws IOException {
 		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION,"Confirm Save",
 			"Are you sure you want to save this configuration??").showAndWait();
