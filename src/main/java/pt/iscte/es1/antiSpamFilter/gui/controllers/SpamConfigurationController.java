@@ -6,7 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import org.uma.jmetal.solution.DoubleSolution;
@@ -16,6 +21,12 @@ import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.infrastructure.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 import pt.iscte.es1.antiSpamFilter.gui.AlertMessage;
+import pt.iscte.es1.antiSpamFilter.infrastructure.NsgaRToEpsCompiler;
+import pt.iscte.es1.antiSpamFilter.infrastructure.NsgaTexToPdfCompiler;
+import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
+
+import java.io.IOException;
+import java.io.FileWriter;
 import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
 import java.io.FileWriter;
@@ -103,7 +114,17 @@ public class SpamConfigurationController implements Initializable {
 	 * Generates weights with NSGA-II algorithm
 	 */
 	public void handleNSGAII(ActionEvent actionEvent) {
+		// Choose profile for User
+		chooseProfile();
+
+		// TODO
 		handleEvaluation();
+
+		// After calculation its necessary to compile the R file and present it to the user
+		new NsgaRToEpsCompiler().compileAndShow();
+
+		// After calculation its necessary to compile Tex file and present it to user
+		new NsgaTexToPdfCompiler().compileAndShow();
 	}
 
 	/**
@@ -136,10 +157,9 @@ public class SpamConfigurationController implements Initializable {
 	 *
 	 * @throws IOException if not able to save the configuration
 	 */
-
 	public void save() throws IOException {
-		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION, "Confirm Save", "Are you sure you want to save this configuration??")
-			.showAndWait();
+		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION,"Confirm Save",
+			"Are you sure you want to save this configuration??").showAndWait();
 
 		if (!result.isPresent() || result.get() != ButtonType.OK) {
 			return;
@@ -149,8 +169,8 @@ public class SpamConfigurationController implements Initializable {
 		RulesWriter rw = new RulesWriter(fw);
 		rw.write(context.getWeightedRules());
 
-		new AlertMessage(Alert.AlertType.INFORMATION, "Result Save", "Configuration saved with success!!")
-			.showAndWait();
+		new AlertMessage(Alert.AlertType.INFORMATION,
+			"Result Save", "Configuration saved with success!!").showAndWait();
 	}
 
 	/**
