@@ -6,7 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import org.uma.jmetal.solution.DoubleSolution;
@@ -16,8 +21,12 @@ import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.infrastructure.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 import pt.iscte.es1.antiSpamFilter.gui.AlertMessage;
+import pt.iscte.es1.antiSpamFilter.infrastructure.NsgaRToEpsCompiler;
+import pt.iscte.es1.antiSpamFilter.infrastructure.NsgaTexToPdfCompiler;
 import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
+import java.awt.*;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -103,7 +112,46 @@ public class SpamConfigurationController implements Initializable {
 	 * Generates weights with NSGA-II algorithm
 	 */
 	public void handleNSGAII(ActionEvent actionEvent) {
+		// Choose Profile for User
+		chooseProfile();
+
 		handleEvaluation();
+
+		// After calculation its necessary to compile R to EPS file and present it to the User
+		try {
+			File epsFile = new NsgaRToEpsCompiler().compile();
+			if (epsFile == null) {
+				new AlertMessage(Alert.AlertType.ERROR,
+					"Error Opening File",
+					"There was a problem trying to open the file.\nPlease verify if the file exists.")
+					.showAndWait();
+			} else {
+				Desktop.getDesktop().open(epsFile);
+			}
+		} catch (IOException e) {
+			new AlertMessage(
+				Alert.AlertType.ERROR,"Error Executing Script",
+				"There was a problem executing the script.\nPlease configure Rscript to run the script.")
+				.showAndWait();
+		}
+
+		// After calculation its necessary to compile Tex to PDF file and present it to the User
+		try {
+			File pdfFile = new NsgaTexToPdfCompiler().compile();
+			if (pdfFile == null) {
+				new AlertMessage(Alert.AlertType.ERROR,
+					"Error Opening File",
+					"There was a problem trying to open the file.\nPlease verify if the file exists.")
+					.showAndWait();
+			} else {
+				Desktop.getDesktop().open(pdfFile);
+			}
+		} catch (IOException e) {
+			new AlertMessage(
+				Alert.AlertType.ERROR,"Error Executing Script",
+				"There was a problem executing the script.\nPlease configure Rscript to run the script.")
+				.showAndWait();
+		}
 	}
 
 	/**

@@ -1,13 +1,15 @@
 package pt.iscte.es1.antiSpamFilter.gui;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 public class Main extends Application {
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -15,9 +17,12 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Anti Spam Filter");
-		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("template/select_paths.fxml"));
-		Scene scene = new Scene(root, 600, 250);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		URL url = getClass().getClassLoader().getResource("template/select_paths.fxml");
+		if (url != null) {
+			Parent root = FXMLLoader.load(url);
+			Scene scene = new Scene(root, 600, 250);
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		}
 	}
 }
