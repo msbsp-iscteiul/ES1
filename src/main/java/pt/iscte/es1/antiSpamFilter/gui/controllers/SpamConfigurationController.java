@@ -21,8 +21,8 @@ import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
 import pt.iscte.es1.antiSpamFilter.infrastructure.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 import pt.iscte.es1.antiSpamFilter.gui.AlertMessage;
-import pt.iscte.es1.antiSpamFilter.infrastructure.NsgaRToEpsCompiler;
-import pt.iscte.es1.antiSpamFilter.infrastructure.NsgaTexToPdfCompiler;
+import pt.iscte.es1.antiSpamFilter.infrastructure.result_compilers.NsgaRToEpsCompiler;
+import pt.iscte.es1.antiSpamFilter.infrastructure.result_compilers.NsgaTexToPdfCompiler;
 import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
 import java.awt.*;
@@ -116,41 +116,39 @@ public class SpamConfigurationController implements Initializable {
 		chooseProfile();
 
 		handleEvaluation();
+		buildREps();
+		buildLatexPdf();
+	}
 
-		// After calculation its necessary to compile R to EPS file and present it to the User
-		try {
-			File epsFile = new NsgaRToEpsCompiler().compile();
-			if (epsFile == null) {
-				new AlertMessage(Alert.AlertType.ERROR,
-					"Error Opening File",
-					"There was a problem trying to open the file.\nPlease verify if the file exists.")
-					.showAndWait();
-			} else {
-				Desktop.getDesktop().open(epsFile);
-			}
-		} catch (IOException e) {
-			new AlertMessage(
-				Alert.AlertType.ERROR,"Error Executing Script",
-				"There was a problem executing the script.\nPlease configure Rscript to run the script.")
-				.showAndWait();
-		}
-
-		// After calculation its necessary to compile Tex to PDF file and present it to the User
+	/**
+	 * After calculation its necessary to compile Tex to PDF file and present it to the User
+	 */
+	private void buildLatexPdf() {
 		try {
 			File pdfFile = new NsgaTexToPdfCompiler().compile();
-			if (pdfFile == null) {
-				new AlertMessage(Alert.AlertType.ERROR,
-					"Error Opening File",
-					"There was a problem trying to open the file.\nPlease verify if the file exists.")
-					.showAndWait();
-			} else {
-				Desktop.getDesktop().open(pdfFile);
-			}
+			Desktop.getDesktop().open(pdfFile);
 		} catch (IOException e) {
 			new AlertMessage(
-				Alert.AlertType.ERROR,"Error Executing Script",
+				Alert.AlertType.ERROR, "Error Executing Script",
+				"There was a problem executing the script.\nPlease configure pdflatex to run the script.")
+				.showAndWait();
+		} catch (InterruptedException ignore) {
+		}
+	}
+
+	/**
+	 * After calculation its necessary to compile R to EPS file and present it to the User
+	 */
+	private void buildREps() {
+		try {
+			File epsFile = new NsgaRToEpsCompiler().compile();
+			Desktop.getDesktop().open(epsFile);
+		} catch (IOException e) {
+			new AlertMessage(
+				Alert.AlertType.ERROR, "Error Executing Script",
 				"There was a problem executing the script.\nPlease configure Rscript to run the script.")
 				.showAndWait();
+		} catch (InterruptedException ignore) {
 		}
 	}
 
