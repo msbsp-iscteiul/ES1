@@ -6,34 +6,31 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterConstants;
+import pt.iscte.es1.antiSpamFilter.AntiSpamFilterNSGAIIRunner;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterProblem;
-import pt.iscte.es1.antiSpamFilter.infrastructure.ExperimentContext;
+import pt.iscte.es1.antiSpamFilter.domain.PositiveNegativeSet;
+import pt.iscte.es1.antiSpamFilter.domain.Solution;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 import pt.iscte.es1.antiSpamFilter.gui.AlertMessage;
+import pt.iscte.es1.antiSpamFilter.infrastructure.*;
 import pt.iscte.es1.antiSpamFilter.infrastructure.result_compilers.NsgaRToEpsCompiler;
 import pt.iscte.es1.antiSpamFilter.infrastructure.result_compilers.NsgaTexToPdfCompiler;
-import pt.iscte.es1.antiSpamFilter.infrastructure.RulesWriter;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -109,12 +106,33 @@ public class SpamConfigurationController implements Initializable {
 	}
 
 	/**
-	 * Generates weights with NSGA-II algorithm
+	 * Handles the NSGAII algorithm generated weight vector accordingly to the chosen inbox profile
+	 *
+	 * @throws IOException File Not Found Exception
 	 */
-	public void handleNSGAII(ActionEvent actionEvent) {
+	public void handleNSGAII() throws IOException {
 		// Choose Profile for User
-		chooseProfile();
+		final String profile = chooseProfile();
+		if (profile == null) {
+			return;
+		}
+		final AntiSpamFilterNSGAIIRunner config = new AntiSpamFilterNSGAIIRunner(problem);
+		config.generateNSGA();
 
+		final AntiSpamFileReader<PositiveNegativeSet> reader = new AntiSpamFileReader<>(new PositiveNegativeParser());
+		final AntiSpamFileReader<Solution> readResultComposite = new AntiSpamFileReader<>(
+			new ExperimentResultWeightsParser());
+
+		final List<PositiveNegativeSet> positiveNegativeSets = reader.readFile(new FileReader(
+			AntiSpamFilterConstants.REFERENCE_FRONT_DIRECTORY + "/AntiSpamFilterProblem.NSGAII.rf"));
+		final List<Solution> resultWeightComposites = readResultComposite.readFile(new FileReader(
+			AntiSpamFilterConstants.REFERENCE_FRONT_DIRECTORY + "/AntiSpamFilterProblem.NSGAII.rs"));
+		final ResultSelector selector = ResultSelector.factory(profile);
+		final Solution doubles = selector.selectFromResults(positiveNegativeSets,resultWeightComposites);
+		final Iterator<Double> iterator = doubles.iterator();
+
+		context.getWeightedRules().forEach(weightedRule -> weightedRule.setWeight(iterator.next()));
+		tableView.refresh();
 		handleEvaluation();
 		buildREps();
 		buildLatexPdf();
@@ -205,7 +223,6 @@ public class SpamConfigurationController implements Initializable {
 	 * @return the selected profile
 	 */
 	private String chooseProfile() {
-
 		List<String> choices = Arrays.asList("Leisure", "Professional", "Intermediate");
 
 		ChoiceDialog<String> profileSelector = new ChoiceDialog<>("Leisure", choices);
