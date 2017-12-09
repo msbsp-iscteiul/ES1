@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="pt.iscte.es1.antiSpamFilter.gui.controllers.SelectPathController"
+          alignment="CENTER" vgap="20" hgap="20" styleClass="root">
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25">
+        </Insets>
+    </padding>
+
+    <Text id="select-path-text" text="Select Paths"
+          GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3"/>
+
+    <Label text="Rules.cf Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="rulesPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <HBox GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <Button prefWidth="100" text="Select" onAction="#handleRulesPath"/>
+    </HBox>
+
+    <Label text="Spam.log Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <TextField fx:id="spamPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
+        <Button prefWidth="100" text="Select" onAction="#handleSpamPath"/>
+    </HBox>
+
+    <Label text="Ham.log Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <TextField fx:id="hamPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <HBox GridPane.columnIndex="2" GridPane.rowIndex="3">
+        <Button prefWidth="100" text="Select" onAction="#handleHamPath"/>
+    </HBox>
+
+    <HBox prefWidth="75" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <Button text="Close" prefWidth="75" fx:id="closeButton" onAction="#handleClose"/>
+    </HBox>
+
+    <HBox prefWidth="100" alignment="BOTTOM_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="4">
+        <Button text="Continue" prefWidth="100" fx:id="continueButton" onAction="#handleContinue"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@css/select_paths.css" />
+    </stylesheets>
+
+</GridPane>

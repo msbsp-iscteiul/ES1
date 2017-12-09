@@ -8,46 +8,54 @@ import java.util.Objects;
 public class WeightedRule {
 
 	private final String name;
-	private final Double weight;
+	private Double weight;
 
 	/**
 	 * Default constructor that accepts a name and an associated weight.
-	 * 
+	 *
 	 * @param name rule name
 	 * @param weight rule weight
 	 */
 	public WeightedRule(String name, Double weight) {
-		if (weight < -5 || weight > 5) {
-			throw new IllegalArgumentException("Weight must be between -5 and 5.");
-		}
+		setWeight(weight);
 		if (name == null) {
 			throw new IllegalArgumentException("Name can not be null.");
 		}
 		this.name = name;
-		this.weight = weight;
 	}
-	
+
 	/**
 	 * Constructor that accepts a name and fills in a neutral weight of 0.0.
-	 * 
+	 *
 	 * @param name rule name
 	 */
 	public WeightedRule(String name) {
 		this(name, 0.0);
 	}
-	
+
 	/**
 	 * @return rule name
 	 */
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * @return rule weight
 	 */
 	public Double getWeight() {
 		return weight;
+	}
+
+	public void setWeight(Double weight) throws IllegalArgumentException {
+		validateWeight(weight);
+		this.weight = weight;
+	}
+
+	private void validateWeight(Double weight) throws IllegalArgumentException {
+		if (weight < -5 || weight > 5) {
+			throw new IllegalArgumentException("Weight must be between -5 and 5.");
+		}
 	}
 
 	/**
