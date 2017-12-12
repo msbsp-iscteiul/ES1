@@ -32,11 +32,14 @@ public class AntiSpamFileReader<R> {
 	 * @throws IOException input or output expection
 	 */
 	public List<R> readFile(Reader inReader) throws IOException {
-		try (BufferedReader reader = new BufferedReader(inReader)) {
+		final BufferedReader reader = new BufferedReader(inReader);
+		try {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				results.add(parser.parse(line));
 			}
+		} finally {
+			reader.close();
 		}
 		final List<R> aux = results;
 		results = new ArrayList<>();

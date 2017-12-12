@@ -53,9 +53,10 @@ public class SolutionTest {
 
 	@Test
 	public void equals() throws Exception {
-		assertEquals(new Solution(weights), item);
+		assertTrue(new Solution(weights).equals(item));
 		assertFalse(item.equals(null));
 		assertTrue(item.equals(item));
+		assertFalse(item.equals("Lorem Ipsum"));
 	}
 
 	@Test
