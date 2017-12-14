@@ -56,11 +56,15 @@ public class SpamConfigurationController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		rulesColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getName()));
-		weightsColumn.setOnEditCommit(e -> {
+		weightsColumn.setOnEditCommit(cell -> {
 			try {
-				final Double weight = Double.valueOf(e.getNewValue());
-				e.getRowValue().setWeight(weight);
-			} catch (IllegalArgumentException ignore) {
+				final Double weight = Double.valueOf(cell.getNewValue());
+				cell.getRowValue().setWeight(weight);
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+				new AlertMessage(Alert.AlertType.ERROR, "Valor de inserção inválido",
+					"Valor de inserção tem de ser número real de -5 a 5").showAndWait();
+				tableView.refresh();
 			}
 		});
 		weightsColumn.setCellValueFactory(
