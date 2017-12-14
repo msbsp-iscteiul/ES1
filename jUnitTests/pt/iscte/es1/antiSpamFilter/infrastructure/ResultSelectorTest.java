@@ -1,9 +1,12 @@
 package pt.iscte.es1.antiSpamFilter.infrastructure;
 
 import org.junit.Test;
+import pt.iscte.es1.antiSpamFilter.AntiSpamFilterConstants;
 import pt.iscte.es1.antiSpamFilter.domain.PositiveNegativeSet;
 import pt.iscte.es1.antiSpamFilter.domain.Solution;
 import pt.iscte.es1.antiSpamFilter.infrastructure.result_selector_strategies.LeisureStrategy;
+import pt.iscte.es1.antiSpamFilter.infrastructure.result_selector_strategies.ProfessionalAndLeisureStragety;
+import pt.iscte.es1.antiSpamFilter.infrastructure.result_selector_strategies.ProfessionalStrategy;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -33,5 +36,31 @@ public class ResultSelectorTest {
 		final Solution match = rs.selectFromResults(positiveNegativeSets, weightComposites);
 		final Solution shouldMatch = experimentResultWeightsParser.parse(selectedMatch);
 		assertEquals(shouldMatch, match);
+	}
+
+	@Test
+	public void factoryShouldCreateInstancesOfResultSelector() {
+		assertEquals(new ResultSelector(new LeisureStrategy()), ResultSelector.createForProfile(AntiSpamFilterConstants.STRATEGY_LEISURE));
+		assertEquals(new ResultSelector(new ProfessionalStrategy()), ResultSelector.createForProfile(AntiSpamFilterConstants.STRATEGY_PROFESSIONAL));
+		assertEquals(new ResultSelector(new ProfessionalAndLeisureStragety()), ResultSelector.createForProfile(AntiSpamFilterConstants.STRATEGY_MIXED));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void factoryShouldThrowWhenTypeDoesntExist() {
+		ResultSelector.createForProfile("Lorem Ipsum");
+	}
+
+	@Test
+	public void equalsTest() {
+		final ResultSelector subject = new ResultSelector(new LeisureStrategy());
+		assertFalse(subject.equals(null));
+		assertFalse(subject.equals("Lorem Ipsum"));
+		assertTrue(subject.equals(subject));
+	}
+
+	@Test
+	public void hashCodeTest() {
+		assertEquals(new ResultSelector(new LeisureStrategy()).hashCode(),
+			ResultSelector.createForProfile(AntiSpamFilterConstants.STRATEGY_LEISURE).hashCode());
 	}
 }

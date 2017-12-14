@@ -127,7 +127,7 @@ public class SpamConfigurationController implements Initializable {
 			AntiSpamFilterConstants.REFERENCE_FRONT_DIRECTORY + "/AntiSpamFilterProblem.NSGAII.rf"));
 		final List<Solution> resultWeightComposites = readResultComposite.readFile(new FileReader(
 			AntiSpamFilterConstants.REFERENCE_FRONT_DIRECTORY + "/AntiSpamFilterProblem.NSGAII.rs"));
-		final ResultSelector selector = ResultSelector.factory(profile);
+		final ResultSelector selector = ResultSelector.createForProfile(profile);
 		final Solution doubles = selector.selectFromResults(positiveNegativeSets,resultWeightComposites);
 		final Iterator<Double> iterator = doubles.iterator();
 
@@ -223,7 +223,11 @@ public class SpamConfigurationController implements Initializable {
 	 * @return the selected profile
 	 */
 	private String chooseProfile() {
-		List<String> choices = Arrays.asList("Leisure", "Professional", "Intermediate");
+		List<String> choices = Arrays.asList(
+			AntiSpamFilterConstants.STRATEGY_LEISURE,
+			AntiSpamFilterConstants.STRATEGY_PROFESSIONAL,
+			AntiSpamFilterConstants.STRATEGY_MIXED
+		);
 
 		ChoiceDialog<String> profileSelector = new ChoiceDialog<>("Leisure", choices);
 		profileSelector.setTitle("Profile");
