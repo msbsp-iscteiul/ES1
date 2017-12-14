@@ -22,6 +22,7 @@ import java.util.List;
  * NSGAII algorithm for the {@link AntiSpamFilterProblem}
  */
 public class AntiSpamFilterNSGAIIRunner {
+
 	private final DoubleProblem problem;
 
 	/**

@@ -18,11 +18,9 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Anti Spam Filter");
 		URL url = getClass().getClassLoader().getResource("template/select_paths.fxml");
-		if (url != null) {
-			Parent root = FXMLLoader.load(url);
-			Scene scene = new Scene(root, 600, 250);
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		}
+		Parent root = FXMLLoader.load(url);
+		Scene scene = new Scene(root, 600, 250);
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
 }
