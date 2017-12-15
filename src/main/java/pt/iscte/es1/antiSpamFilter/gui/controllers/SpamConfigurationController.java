@@ -62,8 +62,8 @@ public class SpamConfigurationController implements Initializable {
 				cell.getRowValue().setWeight(weight);
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
-				new AlertMessage(Alert.AlertType.ERROR, "Valor de inserção inválido",
-					"Valor de inserção tem de ser número real de -5 a 5").showAndWait();
+				new AlertMessage(Alert.AlertType.ERROR, "Error",
+					e.getMessage()).showAndWait();
 				tableView.refresh();
 			}
 		});
