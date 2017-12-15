@@ -27,11 +27,13 @@
             <Button id="random" mnemonicParsing="false" onAction="#handleRandom" text="Random">
                 <VBox.margin>
                     <Insets bottom="10.0" />
-                </VBox.margin></Button>
+                </VBox.margin>
+            </Button>
             <Button id="nsga" mnemonicParsing="false" onAction="#handleNSGAII" text="NSGA-II">
                <VBox.margin>
                   <Insets bottom="10.0" />
-               </VBox.margin></Button>
+               </VBox.margin>
+            </Button>
             <Button id="evaluate" mnemonicParsing="false" onAction="#handleEvaluation" text="Evaluate" />
          </children>
       </VBox>
