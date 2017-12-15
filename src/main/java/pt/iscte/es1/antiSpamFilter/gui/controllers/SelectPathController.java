@@ -94,15 +94,15 @@ public class SelectPathController {
 			openSpamConfiguration(actionEvent, context);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			new AlertMessage(Alert.AlertType.ERROR, "Erros nos ficheiros seleccionados",
-				"Ficheiro não definido ou inválido").showAndWait();
+			new AlertMessage(Alert.AlertType.ERROR, "Errors detected in the selected files",
+				"File not defined or invalid").showAndWait();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-			new AlertMessage(Alert.AlertType.ERROR, "Erro de tipos de dados nos ficheiros seleccionados",
-				"Um ficheiro tem um tipo de dados inválido: " + e.getMessage()).showAndWait();
+			new AlertMessage(Alert.AlertType.ERROR, "Some files have invalid data",
+				"Invalid data in some or all files: " + e.getMessage()).showAndWait();
 		} catch (Exception e) {
 			e.printStackTrace();
-			new AlertMessage(Alert.AlertType.ERROR, "Erros nos ficheiros seleccionados",
+			new AlertMessage(Alert.AlertType.ERROR, "Errors detected in the selected files",
 				e.getMessage()).showAndWait();
 		}
 	}
