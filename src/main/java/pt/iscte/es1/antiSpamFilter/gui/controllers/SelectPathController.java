@@ -61,6 +61,9 @@ public class SelectPathController {
 		return new ExperimentContext(ham, spam, rules, new File(rulesPath.getText()));
 	}
 
+	/**
+	 * @return the current stage being used
+	 */
 	private Stage getStage() {
 		return (Stage) rulesPath.getScene().getWindow();
 	}
@@ -156,7 +159,7 @@ public class SelectPathController {
 	 * @param lastUsedFolder last used folder for opening a file
 	 */
 	private static void updateLastFolderPreference(String lastUsedFolder) {
-			USER_PREFERENCES.put(LAST_USED_FOLDER, lastUsedFolder);
+		USER_PREFERENCES.put(LAST_USED_FOLDER, lastUsedFolder);
 	}
 
         /**

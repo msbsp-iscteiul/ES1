@@ -40,9 +40,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class SpamConfigurationController implements Initializable {
 
 	@FXML
-	public Label falsePositivesQuantity;
+	private Label falsePositivesQuantity;
 	@FXML
-	public Label falseNegativesQuantity;
+	private Label falseNegativesQuantity;
 	@FXML
 	private TableColumn<WeightedRule, String> rulesColumn;
 	@FXML
@@ -54,6 +54,9 @@ public class SpamConfigurationController implements Initializable {
 	private ExperimentContext context;
 	private AntiSpamFilterProblem problem;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		rulesColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getName()));
@@ -122,12 +125,12 @@ public class SpamConfigurationController implements Initializable {
 			return;
 		}
 
-                final Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information");
-                alert.setHeaderText(null);
-                alert.setContentText("Generating values. Please wait");
-                alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
-                alert.show();
+		final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText(null);
+		alert.setContentText("Generating values. Please wait");
+		alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
+		alert.show();
 
 		final AntiSpamFilterNSGAIIRunner config = new AntiSpamFilterNSGAIIRunner(problem);
 		config.generateNSGA();
@@ -140,10 +143,10 @@ public class SpamConfigurationController implements Initializable {
 		final List<Solution> resultWeightComposites = readResultComposite.readFile(new FileReader(
 			AntiSpamFilterConstants.REFERENCE_FRONT_DIRECTORY + "/AntiSpamFilterProblem.NSGAII.rs"));
 		final ResultSelector selector = ResultSelector.createForProfile(profile);
-		final Solution doubles = selector.selectFromResults(positiveNegativeSets,resultWeightComposites);
+		final Solution doubles = selector.selectFromResults(positiveNegativeSets, resultWeightComposites);
 		final Iterator<Double> iterator = doubles.iterator();
 		context.getWeightedRules().forEach(weightedRule -> weightedRule.setWeight(iterator.next()));
-                alert.hide();
+		alert.hide();
 		tableView.refresh();
 		handleEvaluation();
 		buildREps();
@@ -214,7 +217,8 @@ public class SpamConfigurationController implements Initializable {
 	 */
 
 	public void save() throws IOException {
-		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION, "Confirm Save", "Are you sure you want to save this configuration??")
+		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION,
+			"Confirm Save", "Are you sure you want to save this configuration?")
 			.showAndWait();
 
 		if (!result.isPresent() || result.get() != ButtonType.OK) {
@@ -225,7 +229,7 @@ public class SpamConfigurationController implements Initializable {
 		RulesWriter rw = new RulesWriter(fw);
 		rw.write(context.getWeightedRules());
 
-		new AlertMessage(Alert.AlertType.INFORMATION, "Result Save", "Configuration saved with success!!")
+		new AlertMessage(Alert.AlertType.INFORMATION, "Result Save", "Configuration saved with success!")
 			.showAndWait();
 	}
 

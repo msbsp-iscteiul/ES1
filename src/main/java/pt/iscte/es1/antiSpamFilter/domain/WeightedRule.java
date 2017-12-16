@@ -47,11 +47,21 @@ public class WeightedRule {
 		return weight;
 	}
 
+	/**
+	 * Sets the rule weight value
+	 * @param weight rule weight value
+	 * @throws IllegalArgumentException when weight is out of bounds
+	 */
 	public void setWeight(Double weight) throws IllegalArgumentException {
 		validateWeight(weight);
 		this.weight = weight;
 	}
 
+	/**
+	 * Validates a rule weight value
+	 * @param weight rule weight
+	 * @throws IllegalArgumentException when weight is out of bounds
+	 */
 	private void validateWeight(Double weight) throws IllegalArgumentException {
 		if (weight < -5 || weight > 5) {
 			throw new IllegalArgumentException("Weight must be between -5 and 5.");
