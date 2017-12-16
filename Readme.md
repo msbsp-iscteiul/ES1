@@ -4,7 +4,7 @@
   - 61161, Michael Carvalho, Developer
   - 62189, Miguel Amaro, Developer
   - 65175, Mauro Pinto, Scrum Master
-  - 73640, Maria Canedo, Quality Manager
+  - 73640, Maria João Canedo, Quality Manager
 - Variant: AntiSpamConfigurationForLeisureMailbox
 - [Demo (TODO)](#) 
 
