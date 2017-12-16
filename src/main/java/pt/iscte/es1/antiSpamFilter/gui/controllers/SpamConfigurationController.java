@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterConstants;
@@ -120,9 +121,16 @@ public class SpamConfigurationController implements Initializable {
 		if (profile == null) {
 			return;
 		}
+
+                final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setHeaderText(null);
+                alert.setContentText("Generating values. Please wait");
+                alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
+                alert.show();
+
 		final AntiSpamFilterNSGAIIRunner config = new AntiSpamFilterNSGAIIRunner(problem);
 		config.generateNSGA();
-
 		final AntiSpamFileReader<PositiveNegativeSet> reader = new AntiSpamFileReader<>(new PositiveNegativeParser());
 		final AntiSpamFileReader<Solution> readResultComposite = new AntiSpamFileReader<>(
 			new ExperimentResultWeightsParser());
@@ -134,8 +142,8 @@ public class SpamConfigurationController implements Initializable {
 		final ResultSelector selector = ResultSelector.createForProfile(profile);
 		final Solution doubles = selector.selectFromResults(positiveNegativeSets,resultWeightComposites);
 		final Iterator<Double> iterator = doubles.iterator();
-
 		context.getWeightedRules().forEach(weightedRule -> weightedRule.setWeight(iterator.next()));
+                alert.hide();
 		tableView.refresh();
 		handleEvaluation();
 		buildREps();
