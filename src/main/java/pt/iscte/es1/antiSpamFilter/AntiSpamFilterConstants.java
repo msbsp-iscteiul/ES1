@@ -1,5 +1,8 @@
 package pt.iscte.es1.antiSpamFilter;
 
+/**
+ * Useful constants used across the project
+ */
 public final class AntiSpamFilterConstants {
 
 	public static final int INDEX_FALSE_NEGATIVE = 0;
