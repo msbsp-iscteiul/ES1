@@ -8,7 +8,14 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests the {@link LeisureStrategy}
+ */
 public class LeisureStrategyTest {
+
+	/**
+	 * Ensures it selects the solution with the lowest false negatives count
+	 */
 	@Test
 	public void shouldSelectLowestFalseNegativeSet() {
 		final List<PositiveNegativeSet> list = Arrays.asList(
@@ -21,6 +28,9 @@ public class LeisureStrategyTest {
 		assertEquals(3, selectedIndex);
 	}
 
+	/**
+	 * Ensures it solves a tie case, returning the lowest false positive solution
+	 */
 	@Test
 	public void whenTiedShouldSelectLowestFalsePositive() {
 		final List<PositiveNegativeSet> list = Arrays.asList(

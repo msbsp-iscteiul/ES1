@@ -13,6 +13,9 @@ import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import pt.iscte.es1.antiSpamFilter.domain.Message;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
+/**
+ * Tests some configurations of the {@link AntiSpamFilterProblem}
+ */
 public class AntiSpamFilterProblemTest {
 
 	private List<WeightedRule> rules = new ArrayList<>(Arrays.asList(
@@ -34,6 +37,9 @@ public class AntiSpamFilterProblemTest {
 	private DefaultDoubleSolution doubleSolution = new DefaultDoubleSolution(teste);
 
 
+	/**
+	 * Tests when there are no false positives or negatives
+	 */
 	@Test
 	public void noFalseOrPositiveNegatives() {
 		doubleSolution.setVariableValue(0, 4.0);
@@ -46,6 +52,9 @@ public class AntiSpamFilterProblemTest {
 		assertTrue(doubleSolution.getObjective(AntiSpamFilterConstants.INDEX_FALSE_POSITIVE) == 0.0);
 	}
 
+	/**
+	 * Tests when there is a false positive and a false negative
+	 */
 	@Test
 	public void oneFalseAndOnePositiveNegatives() {
 		doubleSolution.setVariableValue(0, 2.0);

@@ -8,7 +8,14 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests the {@link ProfessionalAndLeisureStragety}
+ */
 public class ProfessionalAndLeisureStragetyTest {
+
+	/**
+	 * Ensures it selects the closes point to the origin
+	 */
 	@Test
 	public void shouldSelectClosestToOrigin() {
 		final List<PositiveNegativeSet> list = Arrays.asList(

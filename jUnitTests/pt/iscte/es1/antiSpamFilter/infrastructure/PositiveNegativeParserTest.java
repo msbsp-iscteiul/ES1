@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests the {@link PositiveNegativeSet}
+ */
 public class PositiveNegativeParserTest {
 
 	private final ArrayList<String> lines = new ArrayList<>();
@@ -19,6 +22,9 @@ public class PositiveNegativeParserTest {
 		lines.add("2.000 3.000");
 	}
 
+	/**
+	 * Tests the parser login
+	 */
 	@Test
 	public void shouldParseCorrectLines() {
 		PositiveNegativeParser parser = new PositiveNegativeParser();
