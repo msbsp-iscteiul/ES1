@@ -10,6 +10,9 @@ import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests the {@link ExperimentContext}
+ */
 public class ExperimentContextTest {
 
 	private final ExperimentContext item = new ExperimentContext(
@@ -19,23 +22,35 @@ public class ExperimentContextTest {
 		new File("lorem ipsum")
 	);
 
+	/**
+	 * Tests the getHam getter
+	 */
 	@Test
-	public void getHam() throws Exception {
+	public void getHam() {
 		assertEquals(1, item.getHam().size());
 	}
 
+	/**
+	 * Tests the getSpam getter
+	 */
 	@Test
-	public void getSpam() throws Exception {
+	public void getSpam() {
 		assertEquals(1, item.getSpam().size());
 	}
 
+	/**
+	 * Tests the getWeightedRules getter
+	 */
 	@Test
-	public void getWeightedRules() throws Exception {
+	public void getWeightedRules() {
 		assertEquals(1, item.getWeightedRules().size());
 	}
 
+	/**
+	 * Tests the getRulesPath getter
+	 */
 	@Test
-	public void getRulesPath() throws Exception {
+	public void getRulesPath() {
 		assertEquals(new File("lorem ipsum"), item.getRulesPath());
 	}
 }

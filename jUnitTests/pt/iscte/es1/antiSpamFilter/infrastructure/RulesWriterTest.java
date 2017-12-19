@@ -13,12 +13,14 @@ import static org.junit.Assert.*;
 
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 
+/**
+ * Tests the {@link RulesWriter}
+ */
 public class RulesWriterTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
+	/**
+	 * Tests the write logic
+	 */
 	@Test
 	public void shouldWriteRules() throws IOException {
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -32,24 +34,27 @@ public class RulesWriterTest {
 
 		assertEquals("regra\t1.0\nregra2\t2.0\n", byteArrayOutputStream.toString());
 	}
-	
+
+	/**
+	 * Tests an exception case to raise coverage
+	 */
 	@Test(expected = IOException.class)
 	public void canTrowIOExceptionWhenWriting() throws IOException {
 		Writer writer = new Writer() {
 			@Override
 			public void write(char[] cbuf, int off, int len) throws IOException {
-				throw new IOException();				
+				throw new IOException();
 			}
-			
+
 			@Override
 			public void flush() throws IOException {
 			}
-			
+
 			@Override
 			public void close() throws IOException {
 			}
 		};
-		
+
 		List<WeightedRule> weightedRules = new ArrayList<>();
 		weightedRules.add(new WeightedRule("regra", 1.0));
 		RulesWriter rw = new RulesWriter(writer);

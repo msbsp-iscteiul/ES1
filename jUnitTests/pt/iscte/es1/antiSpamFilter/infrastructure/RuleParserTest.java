@@ -8,13 +8,16 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests the {@link RuleParser}
+ */
 public class RuleParserTest {
 
 	private final ArrayList<String> ruleLines = new ArrayList<>();
 	private final ArrayList<String> weightedRuleLines = new ArrayList<>();
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		ruleLines.add("BAYES_00");
 		ruleLines.add("FREEMAIL_FROM");
 		ruleLines.add("RDNS_NONE");
@@ -28,6 +31,9 @@ public class RuleParserTest {
 		weightedRuleLines.add("MSOE_MID_WRONG_CASE	5.0");
 	}
 
+	/**
+	 * Tests the logic on some weighted configurations
+	 */
 	@Test
 	public void shouldParseCorrectWeightedLines() {
 		RuleParser rp = new RuleParser();
@@ -38,6 +44,9 @@ public class RuleParserTest {
 		assertEquals(new WeightedRule("MSOE_MID_WRONG_CASE", 5.0).getWeight(), rp.parse(weightedRuleLines.get(4)).getWeight());
 	}
 
+	/**
+	 * Tests the logic on some weightless configurations
+	 */
 	@Test
 	public void shouldParseCorrectLines() {
 		RuleParser rp = new RuleParser();

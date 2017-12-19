@@ -11,12 +11,14 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests the {@link AntiSpamFileReader}
+ */
 public class AntiSpamFileReaderTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
+	/**
+	 * Tests the reader logic
+	 */
 	@Test
 	public void shouldReadLineSeparatedStrings() throws IOException {
 		AntiSpamFileReader<WeightedRule> fr = new AntiSpamFileReader<>(new RuleParser());
@@ -29,6 +31,9 @@ public class AntiSpamFileReaderTest {
 		assertEquals(2, result.size());
 	}
 
+	/**
+	 * Tests an exceptional case to raise the coverage
+	 */
 	@Test(expected = IOException.class)
 	public void shouldOnLockedFile() throws IOException {
 		AntiSpamFileReader<WeightedRule> fr = new AntiSpamFileReader<>(new RuleParser());

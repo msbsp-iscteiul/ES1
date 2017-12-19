@@ -15,6 +15,9 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * Test the {@link AntiSpamFilterNSGAIIRunner jMetal NSGA-II runner}
+ */
 public class AntiSpamFilterNSGAIIRunnerTest {
 
 	@Before
@@ -22,6 +25,9 @@ public class AntiSpamFilterNSGAIIRunnerTest {
 		new File(AntiSpamFilterConstants.REFERENCE_FRONT_DIRECTORY + "/AntiSpamFilterProblem.rf").delete();
 	}
 
+	/**
+	 * Tests if the file creation was successful after running jMetal with the NSGA-II algorithm
+	 */
 	@Test
 	public void generateNSGA() throws IOException {
 		final AntiSpamFileReader<WeightedRule> weightedRuleAntiSpamFileReader = new AntiSpamFileReader<>(new RuleParser());

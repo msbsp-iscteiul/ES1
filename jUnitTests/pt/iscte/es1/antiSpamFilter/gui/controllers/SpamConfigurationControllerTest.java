@@ -12,16 +12,22 @@ import org.junit.Test;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
 import pt.iscte.es1.antiSpamFilter.gui.Main;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.*;
 
+/**
+ * Tests the {@link SpamConfigurationController}
+ */
 public class SpamConfigurationControllerTest {
 	private static final int NUMBER_OF_RULES_IN_EXAMPLE = 335;
 
 	@Rule
 	public JavaFXThreadingRule javafxRule = new JavaFXThreadingRule();
 
+	/**
+	 * Launches the {@link SpamConfigurationController} scene
+	 *
+	 * @return root scene
+	 */
 	private Parent launchScene() throws Exception {
 		final Stage primaryStage = new Stage();
 		new Main().start(primaryStage); // Create and
@@ -36,6 +42,9 @@ public class SpamConfigurationControllerTest {
 		return primaryStage.getScene().getRoot();
 	}
 
+	/**
+	 * Ensures the table is loaded with the rules
+	 */
 	@Test
 	public void tableViewSizeShouldEqualExampleFile() throws Exception {
 		final Parent root = launchScene();
@@ -43,6 +52,9 @@ public class SpamConfigurationControllerTest {
 		assertEquals(NUMBER_OF_RULES_IN_EXAMPLE, size);
 	}
 
+	/**
+	 * Ensures the quality changes when the rules are manually changed
+	 */
 	@Test
 	public void qualityShouldChangeWhenWeightsChangedManually() throws Exception {
 		final Parent root = launchScene();
@@ -57,6 +69,9 @@ public class SpamConfigurationControllerTest {
 		assertEquals(new Double(73), falseNegatives);
 	}
 
+	/**
+	 * Ensures the quality changes when the rules are randomly generated
+	 */
 	@Test
 	public void qualityShouldChangeWhenWeightsChangedRandomly() throws Exception {
 		final Parent root = launchScene();
