@@ -71,7 +71,7 @@ O que corre menos bem?
 * Testes a nível de GUI revelaram-se mais complexos do que o esperado.
 
 
-O que vamos fazer melhor para a próxima?
+O que vamos fazer para correr melhor?
 
 
 * Nada a apontar
