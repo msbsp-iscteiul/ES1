@@ -6,11 +6,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterConstants;
@@ -24,14 +28,17 @@ import pt.iscte.es1.antiSpamFilter.infrastructure.*;
 import pt.iscte.es1.antiSpamFilter.infrastructure.result_compilers.NsgaRToEpsCompiler;
 import pt.iscte.es1.antiSpamFilter.infrastructure.result_compilers.NsgaTexToPdfCompiler;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -225,6 +232,8 @@ public class SpamConfigurationController implements Initializable {
 			return;
 		}
 
+//		For the case the User selects the Path
+//		FileWriter fw = new FileWriter(directoryChooser().getAbsolutePath() + "/rules.cf", false);
 		FileWriter fw = new FileWriter(context.getRulesPath(), false);
 		RulesWriter rw = new RulesWriter(fw);
 		rw.write(context.getWeightedRules());
@@ -252,5 +261,17 @@ public class SpamConfigurationController implements Initializable {
 		Optional<String> result = profileSelector.showAndWait();
 
 		return result.orElse(null);
+	}
+
+	/**
+	 * Directory Chooser for the user to save the rules.cf file
+	 *
+	 * @return File - Path chosen by the user
+	 */
+	private File directoryChooser() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("Directory Chooser");
+		directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		return directoryChooser.showDialog(this.parentScene.getWindow());
 	}
 }
