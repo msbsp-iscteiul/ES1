@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.impl.DefaultDoubleSolution;
 import pt.iscte.es1.antiSpamFilter.AntiSpamFilterConstants;
@@ -39,9 +40,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class SpamConfigurationController implements Initializable {
 
 	@FXML
-	public Label falsePositivesQuantity;
+	private Label falsePositivesQuantity;
 	@FXML
-	public Label falseNegativesQuantity;
+	private Label falseNegativesQuantity;
 	@FXML
 	private TableColumn<WeightedRule, String> rulesColumn;
 	@FXML
@@ -53,14 +54,21 @@ public class SpamConfigurationController implements Initializable {
 	private ExperimentContext context;
 	private AntiSpamFilterProblem problem;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		rulesColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getName()));
-		weightsColumn.setOnEditCommit(e -> {
+		weightsColumn.setOnEditCommit(cell -> {
 			try {
-				final Double weight = Double.valueOf(e.getNewValue());
-				e.getRowValue().setWeight(weight);
-			} catch (IllegalArgumentException ignore) {
+				final Double weight = Double.valueOf(cell.getNewValue());
+				cell.getRowValue().setWeight(weight);
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+				new AlertMessage(Alert.AlertType.ERROR, "Error",
+					e.getMessage()).showAndWait();
+				tableView.refresh();
 			}
 		});
 		weightsColumn.setCellValueFactory(
@@ -116,9 +124,16 @@ public class SpamConfigurationController implements Initializable {
 		if (profile == null) {
 			return;
 		}
+
+		final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText(null);
+		alert.setContentText("Generating values. Please wait");
+		alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(false);
+		alert.show();
+
 		final AntiSpamFilterNSGAIIRunner config = new AntiSpamFilterNSGAIIRunner(problem);
 		config.generateNSGA();
-
 		final AntiSpamFileReader<PositiveNegativeSet> reader = new AntiSpamFileReader<>(new PositiveNegativeParser());
 		final AntiSpamFileReader<Solution> readResultComposite = new AntiSpamFileReader<>(
 			new ExperimentResultWeightsParser());
@@ -127,11 +142,11 @@ public class SpamConfigurationController implements Initializable {
 			AntiSpamFilterConstants.REFERENCE_FRONT_DIRECTORY + "/AntiSpamFilterProblem.NSGAII.rf"));
 		final List<Solution> resultWeightComposites = readResultComposite.readFile(new FileReader(
 			AntiSpamFilterConstants.REFERENCE_FRONT_DIRECTORY + "/AntiSpamFilterProblem.NSGAII.rs"));
-		final ResultSelector selector = ResultSelector.factory(profile);
-		final Solution doubles = selector.selectFromResults(positiveNegativeSets,resultWeightComposites);
+		final ResultSelector selector = ResultSelector.createForProfile(profile);
+		final Solution doubles = selector.selectFromResults(positiveNegativeSets, resultWeightComposites);
 		final Iterator<Double> iterator = doubles.iterator();
-
 		context.getWeightedRules().forEach(weightedRule -> weightedRule.setWeight(iterator.next()));
+		alert.hide();
 		tableView.refresh();
 		handleEvaluation();
 		buildREps();
@@ -202,7 +217,8 @@ public class SpamConfigurationController implements Initializable {
 	 */
 
 	public void save() throws IOException {
-		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION, "Confirm Save", "Are you sure you want to save this configuration??")
+		final Optional<ButtonType> result = new AlertMessage(Alert.AlertType.CONFIRMATION,
+			"Confirm Save", "Are you sure you want to save this configuration?")
 			.showAndWait();
 
 		if (!result.isPresent() || result.get() != ButtonType.OK) {
@@ -213,7 +229,7 @@ public class SpamConfigurationController implements Initializable {
 		RulesWriter rw = new RulesWriter(fw);
 		rw.write(context.getWeightedRules());
 
-		new AlertMessage(Alert.AlertType.INFORMATION, "Result Save", "Configuration saved with success!!")
+		new AlertMessage(Alert.AlertType.INFORMATION, "Result Save", "Configuration saved with success!")
 			.showAndWait();
 	}
 
@@ -223,7 +239,11 @@ public class SpamConfigurationController implements Initializable {
 	 * @return the selected profile
 	 */
 	private String chooseProfile() {
-		List<String> choices = Arrays.asList("Leisure", "Professional", "Intermediate");
+		List<String> choices = Arrays.asList(
+			AntiSpamFilterConstants.STRATEGY_LEISURE,
+			AntiSpamFilterConstants.STRATEGY_PROFESSIONAL,
+			AntiSpamFilterConstants.STRATEGY_MIXED
+		);
 
 		ChoiceDialog<String> profileSelector = new ChoiceDialog<>("Leisure", choices);
 		profileSelector.setTitle("Profile");

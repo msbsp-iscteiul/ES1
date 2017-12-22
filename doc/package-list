@@ -1,0 +1,8 @@
+helpers
+pt.iscte.es1.antiSpamFilter
+pt.iscte.es1.antiSpamFilter.domain
+pt.iscte.es1.antiSpamFilter.gui
+pt.iscte.es1.antiSpamFilter.gui.controllers
+pt.iscte.es1.antiSpamFilter.infrastructure
+pt.iscte.es1.antiSpamFilter.infrastructure.result_compilers
+pt.iscte.es1.antiSpamFilter.infrastructure.result_selector_strategies

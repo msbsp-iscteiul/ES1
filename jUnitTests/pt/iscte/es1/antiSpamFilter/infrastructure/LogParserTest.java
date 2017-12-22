@@ -10,6 +10,9 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Tests the {@link LogParser}
+ */
 public class LogParserTest {
 
 	private final List<String> lines = new ArrayList<>();
@@ -21,6 +24,9 @@ public class LogParserTest {
 		lines.add("xval_initial/9/_ham_/00286.74f122eeb4cd901867d74f5676c85809	BAYES_00	SPF_HELO_FAIL");
 	}
 
+	/**
+	 * Tests the parser logic
+	 */
 	@Test
 	public void ShouldParseCorrectLines() {
 		LogParser parser = new LogParser();
@@ -29,6 +35,9 @@ public class LogParserTest {
 		assertTrue(parser.parse(lines.get(2)).matchesRule(new WeightedRule("SPF_HELO_FAIL")));
 	}
 
+	/**
+	 * Ensures the file name is left out of the parsing
+	 */
 	@Test
 	public void ShouldNotIncludeFileName() {
 		LogParser parser = new LogParser();

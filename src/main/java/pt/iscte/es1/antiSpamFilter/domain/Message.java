@@ -18,10 +18,10 @@ public class Message {
 	}
 
 	/**
-	 * Finds if given {@link WeightedRule} matches this {@link Message} 
-	 * 
-	 * @param rule
-	 * @return
+	 * Finds if given {@link WeightedRule} matches this {@link Message}
+	 *
+	 * @param rule rule to match
+	 * @return true if rule is contained within the message, false otherwise
 	 */
 	public boolean matchesRule(WeightedRule rule) {
 		return rules.contains(rule);

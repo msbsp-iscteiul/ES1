@@ -22,29 +22,29 @@
           GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3"/>
 
     <Label text="Rules.cf Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <TextField fx:id="rulesPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <TextField id="rulesPath" fx:id="rulesPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
     <HBox GridPane.columnIndex="2" GridPane.rowIndex="1">
         <Button prefWidth="100" text="Select" onAction="#handleRulesPath"/>
     </HBox>
 
     <Label text="Spam.log Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <TextField fx:id="spamPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    <TextField id="spamPath" fx:id="spamPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
     <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
         <Button prefWidth="100" text="Select" onAction="#handleSpamPath"/>
     </HBox>
 
     <Label text="Ham.log Path: " prefWidth="125" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-    <TextField fx:id="hamPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    <TextField id="hamPath" fx:id="hamPath" editable="false" prefWidth="275" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
     <HBox GridPane.columnIndex="2" GridPane.rowIndex="3">
         <Button prefWidth="100" text="Select" onAction="#handleHamPath"/>
     </HBox>
 
     <HBox prefWidth="75" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button text="Close" prefWidth="75" fx:id="closeButton" onAction="#handleClose"/>
+        <Button text="Close" prefWidth="75" onAction="#handleClose"/>
     </HBox>
 
     <HBox prefWidth="100" alignment="BOTTOM_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="4">
-        <Button text="Continue" prefWidth="100" fx:id="continueButton" onAction="#handleContinue"/>
+        <Button id="continueButton" text="Continue" prefWidth="100" onAction="#handleContinue"/>
     </HBox>
 
     <stylesheets>

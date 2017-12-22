@@ -7,20 +7,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import pt.iscte.es1.antiSpamFilter.infrastructure.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.domain.Message;
 import pt.iscte.es1.antiSpamFilter.domain.WeightedRule;
+import pt.iscte.es1.antiSpamFilter.gui.AlertMessage;
 import pt.iscte.es1.antiSpamFilter.infrastructure.AntiSpamFileReader;
+import pt.iscte.es1.antiSpamFilter.infrastructure.ExperimentContext;
 import pt.iscte.es1.antiSpamFilter.infrastructure.LogParser;
 import pt.iscte.es1.antiSpamFilter.infrastructure.RuleParser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 /**
  * Handles the file chooser scene
@@ -31,6 +35,9 @@ public class SelectPathController {
 		new AntiSpamFileReader<>(new RuleParser());
 	private static final AntiSpamFileReader<Message> MESSAGE_READER =
 		new AntiSpamFileReader<>(new LogParser());
+	private static final Preferences USER_PREFERENCES = Preferences.userRoot()
+			.node(SelectPathController.class.getName());
+	private static final String LAST_USED_FOLDER = "LAST_USED_FOLDER";
 
 	@FXML
 	private TextField rulesPath;
@@ -44,7 +51,8 @@ public class SelectPathController {
 	/**
 	 * Creates an {@link ExperimentContext} with the results of the selected files
 	 * @return the context
-	 * @throws IOException
+	 * @throws IOException when IO error
+	 * @throws IllegalArgumentException when invalid inputs in files being read
 	 */
 	private ExperimentContext createContext() throws IOException {
 		final List<Message> ham = MESSAGE_READER.readFile(new FileReader(hamPath.getText()));
@@ -53,6 +61,9 @@ public class SelectPathController {
 		return new ExperimentContext(ham, spam, rules, new File(rulesPath.getText()));
 	}
 
+	/**
+	 * @return the current stage being used
+	 */
 	private Stage getStage() {
 		return (Stage) rulesPath.getScene().getWindow();
 	}
@@ -78,12 +89,25 @@ public class SelectPathController {
 	/**
 	 * Handles the intent to configure the spam
 	 * @param actionEvent the fired event
-	 * @throws IOException
 	 */
 	@FXML
-	protected void handleContinue(ActionEvent actionEvent) throws IOException {
-		final ExperimentContext context = createContext();
-		openSpamConfiguration(actionEvent, context);
+	protected void handleContinue(ActionEvent actionEvent) {
+		try {
+			final ExperimentContext context = createContext();
+			openSpamConfiguration(actionEvent, context);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			new AlertMessage(Alert.AlertType.ERROR, "Errors detected in the selected files",
+				"File not defined or invalid").showAndWait();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			new AlertMessage(Alert.AlertType.ERROR, "Some files have invalid data",
+				"Invalid data in some or all files: " + e.getMessage()).showAndWait();
+		} catch (Exception e) {
+			e.printStackTrace();
+			new AlertMessage(Alert.AlertType.ERROR, "Errors detected in the selected files",
+				e.getMessage()).showAndWait();
+		}
 	}
 
 	/**
@@ -102,6 +126,7 @@ public class SelectPathController {
 		File file = fileChooser(getStage(), "Rules", "Rules.cf", "*.cf");
 		if (file != null) {
 			rulesPath.setText(file.getAbsolutePath());
+			updateLastFolderPreference(file.getParent());
 		}
 	}
 
@@ -113,6 +138,7 @@ public class SelectPathController {
 		File file = fileChooser(getStage(), "Spam", "Spam.log", "*.log");
 		if (file != null) {
 			spamPath.setText(file.getAbsolutePath());
+			updateLastFolderPreference(file.getParent());
 		}
 	}
 
@@ -124,10 +150,19 @@ public class SelectPathController {
 		File file = fileChooser(getStage(), "Ham", "Ham.log", "*.log");
 		if (file != null) {
 			hamPath.setText(file.getAbsolutePath());
+			updateLastFolderPreference(file.getParent());
 		}
 	}
 
 	/**
+	 * Update last used folder when opening a file
+	 * @param lastUsedFolder last used folder for opening a file
+	 */
+	private static void updateLastFolderPreference(String lastUsedFolder) {
+		USER_PREFERENCES.put(LAST_USED_FOLDER, lastUsedFolder);
+	}
+
+        /**
 	 * File Chooser which returns a File that the user selects.
 	 * @param stage - Primary Stage which is associated with the main Stage, i.e., where the buttons are located
 	 * @param title - File chooser title
@@ -138,7 +173,9 @@ public class SelectPathController {
 	private File fileChooser(Stage stage, String title, String name, String extensions) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
-		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.setInitialDirectory(new File(
+			USER_PREFERENCES.get(LAST_USED_FOLDER, System.getProperty("user.home"))
+		));
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(name, extensions));
 		return fileChooser.showOpenDialog(stage);
 	}

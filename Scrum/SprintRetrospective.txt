@@ -1,0 +1,77 @@
+﻿# Sprint retrospective 1
+
+
+O que correu bem?
+
+
+* Tudo o que estava planeado foi implementado.
+* Código desenvolvido claro e sucinto.
+* Descoberta da estrutura de dados mais eficiente (HashSet) para pesquisa de pesos nas mensagens de spam e ham (complexidade O(1))
+
+
+O que correu menos bem?
+
+
+* Falta de clareza entre os membros em relação aos requisitos iniciais.
+* Dificuldades em entender o algoritmo NSGAII.
+* Dificuldades em entender o baseline, devido à falta de organização e documentação do código.
+* Falta de tempo para daily scrum meeting.
+
+
+O que vamos fazer para correr melhor?
+
+
+* Vamos reunir para esclarecer requisitos.
+* Vamos reunir para entender e adaptar o código do baseline.
+* Vamos tentar conciliar os horários de forma a fazer daily scrum meeting, usar ferramentas online (Whatsapp).
+
+________________
+
+# Sprint retrospective 2
+
+
+O que correu bem?
+
+
+* Tudo o que estava planeado foi implementado.
+* Houve maior envolvimento de todos os membros do grupo no projecto.
+* Membros conseguiram reunir-se mais vezes para entre-ajudarem-se e actualizarem o estado das suas tarefas (daily meeting).
+
+
+O que correu menos bem?
+
+
+* Falta de documentação a nível de quais as ferramentas a utilizar para gerar os ficheiros PDF e EPS.
+
+
+O que vamos fazer para correr melhor?
+
+
+* Nada a apontar
+________________
+
+
+# Sprint retrospective 3
+
+
+O que correu bem?
+
+
+* Conseguimos terminar todos os requisitos e adicionar funcionalidades, como:
+   * Seleccionar qual o tipo de perfil (Leisure, Professional, Leisure and Professional)
+   * Memorizar a pasta do último ficheiro escolhido, melhorando a usabilidade
+   * Filtragem a nível dos tipos de ficheiros seleccionáveis
+   * Melhoria de usabilidade adicionando feedback enquanto o algoritmo NSGA-II está em execução
+* Por acaso a solução que escolhemos para gerar os ficheiros PDF e EPS foi a mesma que a documentada nas “Instruções para a entrega do projeto”
+
+
+O que corre menos bem?
+
+
+* Testes a nível de GUI revelaram-se mais complexos do que o esperado.
+
+
+O que vamos fazer para correr melhor?
+
+
+* Nada a apontar

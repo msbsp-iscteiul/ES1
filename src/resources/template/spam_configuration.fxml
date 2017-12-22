@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -13,19 +14,27 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.iscte.es1.antiSpamFilter.gui.controllers.SpamConfigurationController">
    <center>
-      <TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" >
+      <TableView id="tableView" fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn resizable="false" fx:id="rulesColumn" editable="false" prefWidth="${tableView.width*0.6-10.0}" text="Rules" />
-          <TableColumn resizable="false" fx:id="weightsColumn" prefWidth="${tableView.width*0.4-10.0}" text="Weights" />
+          <TableColumn fx:id="rulesColumn" editable="false" prefWidth="${tableView.width*0.6-10.0}" resizable="false" text="Rules" />
+          <TableColumn fx:id="weightsColumn" prefWidth="${tableView.width*0.4-10.0}" resizable="false" text="Weights" />
         </columns>
       </TableView>
    </center>
    <right>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#handleRandom" text="Random" />
-            <Button mnemonicParsing="false" onAction="#handleNSGAII" text="NSGA-II" />
-            <Button mnemonicParsing="false" onAction="#handleEvaluation" text="Evaluate" />
+            <Button id="random" mnemonicParsing="false" onAction="#handleRandom" text="Random">
+                <VBox.margin>
+                    <Insets bottom="10.0" />
+                </VBox.margin>
+            </Button>
+            <Button id="nsga" mnemonicParsing="false" onAction="#handleNSGAII" text="NSGA-II">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Button>
+            <Button id="evaluate" mnemonicParsing="false" onAction="#handleEvaluation" text="Evaluate" />
          </children>
       </VBox>
    </right>
@@ -43,9 +52,9 @@
               </rowConstraints>
                <children>
                   <Label text="False positives" />
-                  <Label fx:id="falsePositivesQuantity" text="0" GridPane.columnIndex="1" />
+                  <Label id="falsePositivesQuantity" fx:id="falsePositivesQuantity" text="0" GridPane.columnIndex="1" />
                   <Label text="False negatives" GridPane.rowIndex="1" />
-                  <Label fx:id="falseNegativesQuantity" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label id="falseNegativesQuantity" fx:id="falseNegativesQuantity" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <GridPane HBox.hgrow="ALWAYS">
@@ -59,7 +68,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button id="Save" onAction="#save" alignment="TOP_LEFT" mnemonicParsing="false" text="Save configuration" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Button id="Save" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#save" text="Save configuration" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                </children>
             </GridPane>
